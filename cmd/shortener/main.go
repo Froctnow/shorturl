@@ -10,5 +10,5 @@ func main() {
 
 	routers.InitRoutes(server)
 
-	_ = http.ListenAndServe(":3333", server)
+	_ = http.ListenAndServe(":8080", server)
 }

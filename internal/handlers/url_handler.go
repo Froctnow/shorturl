@@ -9,19 +9,19 @@ import (
 	"strings"
 )
 
-const RegexpUrl = "^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/|\\/|\\/\\/)?[A-z0-9_-]*?[:]?[A-z0-9_-]*?[@]?[A-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$"
+const RegexpURL = "^(http:\\/\\/www\\.|https:\\/\\/www\\.|http:\\/\\/|https:\\/\\/|\\/|\\/\\/)?[A-z0-9_-]*?[:]?[A-z0-9_-]*?[@]?[A-z0-9]+([\\-\\.]{1}[a-z0-9]+)*\\.[a-z]{2,5}(:[0-9]{1,5})?(\\/.*)?$"
 
-type UrlHandler struct {
-	urlService *services.UrlService
+type URLHandler struct {
+	urlService *services.URLService
 }
 
-func NewUrlHandler(urlService *services.UrlService) *UrlHandler {
-	urlHandler := &UrlHandler{urlService: urlService}
+func NewUrlHandler(urlService *services.URLService) *URLHandler {
+	urlHandler := &URLHandler{urlService: urlService}
 
 	return urlHandler
 }
 
-func (uh *UrlHandler) HandleRequest() http.HandlerFunc {
+func (uh *URLHandler) HandleRequest() http.HandlerFunc {
 	return func(res http.ResponseWriter, req *http.Request) {
 		switch req.Method {
 		case http.MethodPost:
@@ -37,7 +37,7 @@ func (uh *UrlHandler) HandleRequest() http.HandlerFunc {
 	}
 }
 
-func (uh *UrlHandler) handleIndexPost(res http.ResponseWriter, req *http.Request) {
+func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request) {
 	headerContentType := req.Header.Get("Content-Type")
 
 	if headerContentType != "text/plain" {
@@ -54,7 +54,7 @@ func (uh *UrlHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 
 	url := string(body)
 
-	isMatched, err := regexp.MatchString(RegexpUrl, url)
+	isMatched, err := regexp.MatchString(RegexpURL, url)
 
 	if !isMatched {
 		http.Error(res, "Incorrect URL", http.StatusBadRequest)
@@ -75,7 +75,7 @@ func (uh *UrlHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 	}
 }
 
-func (uh *UrlHandler) handleIndexGet(res http.ResponseWriter, req *http.Request) {
+func (uh *URLHandler) handleIndexGet(res http.ResponseWriter, req *http.Request) {
 	id := strings.TrimPrefix(req.URL.Path, "/")
 
 	_, err := uuid.Parse(id)
