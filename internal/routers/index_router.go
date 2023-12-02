@@ -17,8 +17,8 @@ func NewIndexRouter(server *http.ServeMux) *IndexRouter {
 }
 
 func (ir *IndexRouter) InitRoutes() {
-	urlService := services.NewUrlService()
-	urlHandler := handlers.NewUrlHandler(urlService)
+	urlService := services.NewURLService()
+	urlHandler := handlers.NewURLHandler(urlService)
 
 	ir.server.HandleFunc("/", urlHandler.HandleRequest())
 }

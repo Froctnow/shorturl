@@ -15,7 +15,7 @@ type URLHandler struct {
 	urlService *services.URLService
 }
 
-func NewUrlHandler(urlService *services.URLService) *URLHandler {
+func NewURLHandler(urlService *services.URLService) *URLHandler {
 	urlHandler := &URLHandler{urlService: urlService}
 
 	return urlHandler
@@ -40,7 +40,7 @@ func (uh *URLHandler) HandleRequest() http.HandlerFunc {
 func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request) {
 	headerContentType := req.Header.Get("Content-Type")
 
-	if headerContentType != "text/plain" {
+	if !strings.Contains(headerContentType, "text/plain") {
 		http.Error(res, "Incorrect Content-Type. Only text/plain allowed", http.StatusBadRequest)
 		return
 	}
@@ -85,7 +85,7 @@ func (uh *URLHandler) handleIndexGet(res http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	url, err := uh.urlService.GetUrl(id)
+	url, err := uh.urlService.GetURL(id)
 
 	if err != nil {
 		http.Error(res, err.Error(), http.StatusBadRequest)

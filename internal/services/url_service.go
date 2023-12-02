@@ -12,7 +12,7 @@ type URLService struct {
 	storage map[string]string
 }
 
-func NewUrlService() *URLService {
+func NewURLService() *URLService {
 	urlService := &URLService{make(map[string]string)}
 
 	return urlService
@@ -26,7 +26,7 @@ func (us *URLService) CreateShortUrl(url string) string {
 	return ServerURL + "/" + urlAlias
 }
 
-func (us *URLService) GetUrl(alias string) (string, error) {
+func (us *URLService) GetURL(alias string) (string, error) {
 	url := us.storage[alias]
 
 	if url == "" {
