@@ -66,8 +66,9 @@ func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 		return
 	}
 
-	result := uh.urlService.CreateShortUrl(url)
+	result := uh.urlService.CreateShortURL(url)
 
+	res.WriteHeader(http.StatusCreated)
 	_, err = res.Write([]byte(result))
 	if err != nil {
 		http.Error(res, "Something went wrong", http.StatusInternalServerError)

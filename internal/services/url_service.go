@@ -18,7 +18,7 @@ func NewURLService() *URLService {
 	return urlService
 }
 
-func (us *URLService) CreateShortUrl(url string) string {
+func (us *URLService) CreateShortURL(url string) string {
 	urlAlias := uuid.New().String()
 
 	us.storage[urlAlias] = url
