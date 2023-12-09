@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"shorturl/internal/handlers"
 	"shorturl/internal/services"
+	"shorturl/internal/storage"
 )
 
 type IndexRouter struct {
@@ -17,7 +18,13 @@ func NewIndexRouter(server *http.ServeMux) *IndexRouter {
 }
 
 func (ir *IndexRouter) InitRoutes() {
-	urlService := services.NewURLService()
+	ir.initURLRoutes()
+}
+
+func (ir *IndexRouter) initURLRoutes() {
+	storageInstance := storage.NewStorage()
+	urlRepository := storageInstance.URLRepository
+	urlService := services.NewURLService(urlRepository)
 	urlHandler := handlers.NewURLHandler(urlService)
 
 	ir.server.HandleFunc("/", urlHandler.HandleRequest())

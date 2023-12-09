@@ -2,36 +2,35 @@ package services
 
 import (
 	"errors"
-	"github.com/google/uuid"
+	"shorturl/internal/storage"
 )
 
 // ServerURL TODO: Change when create config
 const ServerURL = "http://localhost:8080"
 
 type URLService struct {
-	storage map[string]string
+	urlRepository storage.IURLRepository
 }
 
-func NewURLService() *URLService {
-	urlService := &URLService{make(map[string]string)}
+func NewURLService(urlRepository storage.IURLRepository) *URLService {
+	urlService := &URLService{urlRepository: urlRepository}
 
 	return urlService
 }
 
 func (us *URLService) CreateShortURL(url string) string {
-	urlAlias := uuid.New().String()
+	urlEntityDto := storage.URLEntityDto{URL: url}
+	urlEntity := us.urlRepository.CreateEntity(&urlEntityDto)
 
-	us.storage[urlAlias] = url
-
-	return ServerURL + "/" + urlAlias
+	return ServerURL + "/" + urlEntity.ID
 }
 
 func (us *URLService) GetURL(alias string) (string, error) {
-	url := us.storage[alias]
+	urlEntity := us.urlRepository.GetEntity(alias)
 
-	if url == "" {
+	if urlEntity == nil {
 		return "", errors.New("alias not found")
 	}
 
-	return url, nil
+	return urlEntity.URL, nil
 }

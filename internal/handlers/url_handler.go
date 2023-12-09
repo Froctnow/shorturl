@@ -41,7 +41,7 @@ func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 	headerContentType := req.Header.Get("Content-Type")
 
 	if !strings.Contains(headerContentType, "text/plain") {
-		http.Error(res, "Incorrect Content-Type. Only text/plain allowed", http.StatusBadRequest)
+		http.Error(res, MessageErrorIncorrectContentType, http.StatusBadRequest)
 		return
 	}
 
@@ -57,7 +57,7 @@ func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 	isMatched, err := regexp.MatchString(RegexpURL, url)
 
 	if !isMatched {
-		http.Error(res, "Incorrect URL", http.StatusBadRequest)
+		http.Error(res, MessageErrorIncorrectURL, http.StatusBadRequest)
 		return
 	}
 
@@ -68,6 +68,7 @@ func (uh *URLHandler) handleIndexPost(res http.ResponseWriter, req *http.Request
 
 	result := uh.urlService.CreateShortURL(url)
 
+	res.Header().Add("Content-Type", "text/plain")
 	res.WriteHeader(http.StatusCreated)
 	_, err = res.Write([]byte(result))
 	if err != nil {
@@ -82,14 +83,21 @@ func (uh *URLHandler) handleIndexGet(res http.ResponseWriter, req *http.Request)
 	_, err := uuid.Parse(id)
 
 	if err != nil {
-		http.Error(res, "Incorrect id", http.StatusBadRequest)
+		http.Error(res, MessageErrorIncorrectID, http.StatusBadRequest)
+		return
+	}
+
+	headerContentType := req.Header.Get("Content-Type")
+
+	if !strings.Contains(headerContentType, "text/plain") {
+		http.Error(res, MessageErrorIncorrectContentType, http.StatusBadRequest)
 		return
 	}
 
 	url, err := uh.urlService.GetURL(id)
 
 	if err != nil {
-		http.Error(res, err.Error(), http.StatusBadRequest)
+		http.Error(res, MessageErrorShortURLNotFound, http.StatusNotFound)
 		return
 	}
 
