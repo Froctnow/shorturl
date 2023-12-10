@@ -31,5 +31,5 @@ func (ur *URLRepositoryMock) GetEntity(key string) *URLEntity {
 		return nil
 	}
 
-	return *(&entity)
+	return entity
 }

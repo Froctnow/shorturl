@@ -26,6 +26,7 @@ func TestHandleIndexPost(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		errorMessage, _ := io.ReadAll(result.Body)
 
 		assert.Equal(t, 400, result.StatusCode)
@@ -42,6 +43,7 @@ func TestHandleIndexPost(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		errorMessage, _ := io.ReadAll(result.Body)
 
 		assert.Equal(t, 400, result.StatusCode)
@@ -58,6 +60,7 @@ func TestHandleIndexPost(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		url, _ := io.ReadAll(result.Body)
 
 		fmt.Println(string(url))
@@ -78,6 +81,7 @@ func TestHandleIndexGet(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		errorMessage, _ := io.ReadAll(result.Body)
 
 		assert.Equal(t, 400, result.StatusCode)
@@ -93,6 +97,7 @@ func TestHandleIndexGet(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		errorMessage, _ := io.ReadAll(result.Body)
 
 		assert.Equal(t, 404, result.StatusCode)
@@ -113,6 +118,7 @@ func TestHandleIndexGet(t *testing.T) {
 		h(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 		resultURL := result.Header.Get("Location")
 
 		assert.Equal(t, 307, result.StatusCode)
