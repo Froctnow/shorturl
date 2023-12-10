@@ -84,20 +84,6 @@ func TestHandleIndexGet(t *testing.T) {
 		assert.Equal(t, MessageErrorIncorrectID, strings.TrimSuffix(string(errorMessage), "\n"))
 	})
 
-	t.Run("incorrect content-type", func(t *testing.T) {
-		target := "/" + uuid.New().String()
-		request := httptest.NewRequest(http.MethodGet, target, nil)
-		w := httptest.NewRecorder()
-		h := http.HandlerFunc(urlHandler.handleIndexGet)
-		h(w, request)
-
-		result := w.Result()
-		errorMessage, _ := io.ReadAll(result.Body)
-
-		assert.Equal(t, 400, result.StatusCode)
-		assert.Equal(t, MessageErrorIncorrectContentType, strings.TrimSuffix(string(errorMessage), "\n"))
-	})
-
 	t.Run("short url not found", func(t *testing.T) {
 		target := "/" + uuid.New().String()
 		request := httptest.NewRequest(http.MethodGet, target, nil)

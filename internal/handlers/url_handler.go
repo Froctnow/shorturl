@@ -87,13 +87,6 @@ func (uh *URLHandler) handleIndexGet(res http.ResponseWriter, req *http.Request)
 		return
 	}
 
-	headerContentType := req.Header.Get("Content-Type")
-
-	if !strings.Contains(headerContentType, "text/plain") {
-		http.Error(res, MessageErrorIncorrectContentType, http.StatusBadRequest)
-		return
-	}
-
 	url, err := uh.urlService.GetURL(id)
 
 	if err != nil {
