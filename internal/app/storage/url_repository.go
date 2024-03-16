@@ -39,7 +39,7 @@ func (ur *URLRepository) CreateEntity(urlEntityDto *URLEntityDto) *URLEntity {
 }
 
 func (ur *URLRepository) GetEntity(key string) *URLEntity {
-	entity := *ur.table[key]
+	entity := ur.table[key]
 
-	return &entity
+	return entity
 }

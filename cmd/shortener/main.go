@@ -1,14 +1,13 @@
 package main
 
 import (
-	"net/http"
-	"shorturl/internal/routers"
+	"context"
+	"shorturl/internal/bootstrap"
 )
 
 func main() {
-	server := http.NewServeMux()
+	ctx, cancel := context.WithCancel(context.Background())
+	defer cancel()
 
-	routers.InitRoutes(server)
-
-	_ = http.ListenAndServe(":8080", server)
+	bootstrap.RunApp(ctx)
 }
