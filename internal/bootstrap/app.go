@@ -34,7 +34,7 @@ func RunApp(ctx context.Context) {
 	fmt.Println("app is ready")
 	select {
 	case v := <-exit:
-		fmt.Println((fmt.Sprintf("signal.Notify: %v", v)))
+		fmt.Printf("signal.Notify: %v\n\n", v)
 	case done := <-ctx.Done():
 		fmt.Println(fmt.Errorf("ctx.Done: %v", done))
 	}
