@@ -2,6 +2,7 @@ package config
 
 import (
 	"flag"
+	"fmt"
 )
 
 const (
@@ -23,6 +24,8 @@ func NewConfig() (*Values, error) {
 		Address:  *address,
 		Hostname: *hostname,
 	}
+
+	fmt.Println(cfg)
 
 	return cfg, nil
 }
