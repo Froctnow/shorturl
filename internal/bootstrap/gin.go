@@ -20,7 +20,7 @@ func RunHTTPServer(
 	cfg *config.Values,
 ) (*http.Server, error) {
 	server := &http.Server{
-		Addr:              cfg.Address,
+		Addr:              fmt.Sprintf(`:%d`, 8080),
 		Handler:           ginEngine,
 		ReadHeaderTimeout: 10 * time.Second,
 	}
