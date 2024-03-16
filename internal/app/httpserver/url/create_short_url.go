@@ -40,7 +40,7 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortUrl := r.urlUseCase.CreateShortURL(url)
+	shortURL := r.urlUseCase.CreateShortURL(url)
 
-	ctx.String(http.StatusCreated, shortUrl)
+	ctx.String(http.StatusCreated, shortURL)
 }

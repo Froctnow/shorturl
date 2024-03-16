@@ -69,6 +69,7 @@ func TestUrlRouter_CreateShortURL(t *testing.T) {
 		ginEngine.ServeHTTP(w, request)
 
 		result := w.Result()
+		defer result.Body.Close()
 
 		assert.Equal(t, 201, result.StatusCode)
 	})
