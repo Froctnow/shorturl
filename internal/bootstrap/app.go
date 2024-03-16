@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
@@ -13,8 +14,14 @@ import (
 )
 
 func RunApp(ctx context.Context) {
+	cfg, err := config.NewConfig()
+
+	if err != nil {
+		panic(fmt.Errorf("config read err %w", err))
+	}
+
 	ginEngine := NewGinEngine()
-	httpServer, err := RunHTTPServer(ginEngine)
+	httpServer, err := RunHTTPServer(ginEngine, cfg)
 	if err != nil {
 		panic(fmt.Errorf("http server can't start %w", err))
 	}

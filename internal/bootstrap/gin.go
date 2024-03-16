@@ -3,6 +3,7 @@ package bootstrap
 import (
 	"fmt"
 	"net/http"
+	"shorturl/internal/app/config"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -16,9 +17,10 @@ func NewGinEngine() *gin.Engine {
 
 func RunHTTPServer(
 	ginEngine *gin.Engine,
+	cfg *config.Values,
 ) (*http.Server, error) {
 	server := &http.Server{
-		Addr:              fmt.Sprintf(`:%d`, 8080),
+		Addr:              cfg.Address,
 		Handler:           ginEngine,
 		ReadHeaderTimeout: 10 * time.Second,
 	}
