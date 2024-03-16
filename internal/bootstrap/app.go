@@ -28,7 +28,7 @@ func RunApp(ctx context.Context) {
 
 	storageInstance := storage.NewStorage()
 	storageProvider := provider.NewStorageProvider(storageInstance)
-	urlUseCase := url.NewUseCase(storageProvider)
+	urlUseCase := url.NewUseCase(storageProvider, cfg.Hostname)
 
 	_ = httpserver.NewShortenerServer(
 		ginEngine,

@@ -5,14 +5,17 @@ import (
 )
 
 type urlUseCase struct {
-	provider provider.IStorageProvider
+	provider  provider.IStorageProvider
+	serverURL string
 }
 
 func NewUseCase(
 	provider provider.IStorageProvider,
+	serverURL string,
 ) UseCase {
 	return &urlUseCase{
-		provider: provider,
+		provider:  provider,
+		serverURL: serverURL,
 	}
 }
 

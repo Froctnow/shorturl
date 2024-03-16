@@ -21,6 +21,9 @@ func NewConfig() (*Values, error) {
 	if *address == "" {
 		*address = fmt.Sprintf(`:%d`, 8080)
 	}
+	if *hostname == "" {
+		*hostname = "http://localhost:8080"
+	}
 
 	// разбор командной строки
 	flag.Parse()
