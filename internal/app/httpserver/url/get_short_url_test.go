@@ -20,7 +20,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 
 	storageMock := storage.NewStorage()
 	shortenerProvider := provider.NewStorageProvider(storageMock)
-	urlUseCase := url.NewUseCase(shortenerProvider)
+	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
 	ginEngine.Use(gin.Recovery())
 
 	apiGroup := ginEngine.Group("/")
