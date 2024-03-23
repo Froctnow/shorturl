@@ -7,19 +7,14 @@ import (
 	"os/signal"
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver"
+	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"syscall"
 )
 
-func RunApp(ctx context.Context) {
-	cfg, err := config.NewConfig()
-
-	if err != nil {
-		panic(fmt.Errorf("config read err %w", err))
-	}
-
+func RunApp(ctx context.Context, cfg *config.Values, logger log.LogClient) {
 	ginEngine := NewGinEngine()
 	httpServer, err := RunHTTPServer(ginEngine, cfg)
 	if err != nil {
@@ -33,6 +28,7 @@ func RunApp(ctx context.Context) {
 	_ = httpserver.NewShortenerServer(
 		ginEngine,
 		urlUseCase,
+		logger,
 	)
 
 	exit := make(chan os.Signal, 1)

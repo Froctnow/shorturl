@@ -9,12 +9,14 @@ import (
 type Values struct {
 	Address  string `env:"SERVER_ADDRESS" envSeparator:":"`
 	Hostname string `env:"BASE_URL" envSeparator:":"`
+	LogLevel string `env:"LOG_LEVEL" envSeparator:":"`
 }
 
 func NewConfig() (*Values, error) {
 	var cfg Values
 	address := flag.String("a", "", "address of service")
 	hostname := flag.String("b", "", "hostname of service")
+	logLevel := flag.String("loglevel", "", "level of logs")
 
 	err := env.Parse(&cfg)
 
@@ -38,6 +40,14 @@ func NewConfig() (*Values, error) {
 		}
 
 		cfg.Hostname = *hostname
+	}
+
+	if cfg.LogLevel == "" {
+		if *logLevel == "" {
+			*logLevel = "info"
+		}
+
+		cfg.LogLevel = *logLevel
 	}
 
 	return &cfg, nil
