@@ -50,7 +50,7 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 	})
 
 	t.Run("invalid url", func(t *testing.T) {
-		reqData, _ := json.Marshal(httpmodels.CreateUrlRequest{URL: "some_invalid_url"})
+		reqData, _ := json.Marshal(httpmodels.CreateURLRequest{URL: "some_invalid_url"})
 		request := httptest.NewRequest(http.MethodPost, targetRoute, bytes.NewReader(reqData))
 		request.Header.Add("Content-Type", "application/json")
 
@@ -70,7 +70,7 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 	})
 
 	t.Run("success convert url to short url", func(t *testing.T) {
-		reqData, _ := json.Marshal(httpmodels.CreateUrlRequest{URL: "https://practicum.yandex.ru/"})
+		reqData, _ := json.Marshal(httpmodels.CreateURLRequest{URL: "https://practicum.yandex.ru/"})
 		request := httptest.NewRequest(http.MethodPost, targetRoute, bytes.NewReader(reqData))
 		request.Header.Add("Content-Type", "application/json")
 

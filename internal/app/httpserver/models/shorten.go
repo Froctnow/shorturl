@@ -1,9 +1,9 @@
 package models
 
-type CreateUrlRequest struct {
+type CreateURLRequest struct {
 	URL string `json:"url" binding:"required"`
 }
 
-type CreateUrlResponse struct {
+type CreateURLResponse struct {
 	Result string `json:"result"`
 }

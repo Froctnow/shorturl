@@ -8,7 +8,7 @@ import (
 type validator struct{}
 
 type Validator interface {
-	ShortenCreateShortURL(request *httpmodels.CreateUrlRequest, urlPattern string) *validate.Errors
+	ShortenCreateShortURL(request *httpmodels.CreateURLRequest, urlPattern string) *validate.Errors
 }
 
 func New() Validator {

@@ -17,7 +17,7 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	var req httpmodels.CreateUrlRequest
+	var req httpmodels.CreateURLRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		fmt.Println("ERROR THERE 1", err.Error())
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: err.Error()})
@@ -32,7 +32,7 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 
 	shortURL := r.urlUseCase.CreateShortURL(req.URL)
 
-	ctx.JSON(http.StatusCreated, httpmodels.CreateUrlResponse{
+	ctx.JSON(http.StatusCreated, httpmodels.CreateURLResponse{
 		Result: shortURL,
 	})
 }

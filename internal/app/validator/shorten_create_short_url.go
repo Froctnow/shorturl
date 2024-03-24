@@ -5,7 +5,7 @@ import (
 	httpmodels "shorturl/internal/app/httpserver/models"
 )
 
-func (v *validator) ShortenCreateShortURL(data *httpmodels.CreateUrlRequest, urlPattern string) *validate.Errors {
+func (v *validator) ShortenCreateShortURL(data *httpmodels.CreateURLRequest, urlPattern string) *validate.Errors {
 	checks := []validate.Validator{
 		&StringLenGreaterThenValidator{
 			Name:  "URL",
