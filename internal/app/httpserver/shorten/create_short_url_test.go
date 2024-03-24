@@ -10,7 +10,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"shorturl/internal/app/httpserver/constants"
-	"shorturl/internal/app/httpserver/models"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
@@ -42,7 +41,7 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 
 		result := w.Result()
 		defer result.Body.Close()
-		var errResponse models.ErrorResponse
+		var errResponse httpmodels.ErrorResponse
 		errResult, _ := io.ReadAll(result.Body)
 		json.Unmarshal(errResult, &errResponse)
 
@@ -60,7 +59,7 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 
 		result := w.Result()
 		defer result.Body.Close()
-		var errResponse models.ErrorResponse
+		var errResponse httpmodels.ErrorResponse
 		errResult, _ := io.ReadAll(result.Body)
 		json.Unmarshal(errResult, &errResponse)
 
@@ -81,6 +80,6 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 		result := w.Result()
 		defer result.Body.Close()
 
-		assert.Equal(t, 200, result.StatusCode)
+		assert.Equal(t, 201, result.StatusCode)
 	})
 }

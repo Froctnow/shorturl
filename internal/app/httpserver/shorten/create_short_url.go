@@ -32,7 +32,7 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 
 	shortURL := r.urlUseCase.CreateShortURL(req.URL)
 
-	ctx.JSON(http.StatusOK, httpmodels.CreateUrlResponse{
+	ctx.JSON(http.StatusCreated, httpmodels.CreateUrlResponse{
 		Result: shortURL,
 	})
 }
