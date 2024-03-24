@@ -1,4 +1,4 @@
-package url
+package constants
 
 const MessageErrorIncorrectContentType = "incorrect Content-Type. Only text/plain allowed"
 const MessageErrorIncorrectURL = "Incorrect URL"

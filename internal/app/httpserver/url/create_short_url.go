@@ -5,17 +5,16 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"strings"
 )
-
-const RegexpURL = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
 
 func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 	headerContentType := ctx.GetHeader("Content-Type")
 
 	if !strings.Contains(headerContentType, "text/plain") {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: MessageErrorIncorrectContentType})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}
 
@@ -28,10 +27,10 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 
 	url := string(body)
 
-	isMatched, err := regexp.MatchString(RegexpURL, url)
+	isMatched, err := regexp.MatchString(constants.RegexpURL, url)
 
 	if !isMatched {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: MessageErrorIncorrectURL})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectURL})
 		return
 	}
 

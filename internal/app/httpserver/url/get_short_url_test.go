@@ -8,6 +8,7 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"shorturl/internal/app/httpserver/constants"
 	"shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
@@ -39,7 +40,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 		json.Unmarshal(errResult, &errResponse)
 
 		assert.Equal(t, 400, result.StatusCode)
-		assert.Equal(t, MessageErrorIncorrectAlias, errResponse.Error)
+		assert.Equal(t, constants.MessageErrorIncorrectAlias, errResponse.Error)
 	})
 
 	t.Run("short url not found", func(t *testing.T) {
@@ -56,7 +57,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 		json.Unmarshal(errResult, &errResponse)
 
 		assert.Equal(t, 404, result.StatusCode)
-		assert.Equal(t, MessageErrorShortURLNotFound, errResponse.Error)
+		assert.Equal(t, constants.MessageErrorShortURLNotFound, errResponse.Error)
 	})
 
 	t.Run("success get short url", func(t *testing.T) {
