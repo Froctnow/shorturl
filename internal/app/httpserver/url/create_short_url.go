@@ -7,13 +7,14 @@ import (
 	"regexp"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
-	"strings"
+	"slices"
 )
 
 func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
+	contentTypeHeadersAllowed := []string{"application/x-gzip", "application/json", "text/html"}
 	headerContentType := ctx.GetHeader("Content-Type")
 
-	if !strings.Contains(headerContentType, "text/plain") {
+	if !slices.Contains(contentTypeHeadersAllowed, headerContentType) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}

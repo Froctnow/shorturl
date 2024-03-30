@@ -5,13 +5,14 @@ import (
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
-	"strings"
+	"slices"
 )
 
 func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
+	contentTypeHeadersAllowed := []string{"application/x-gzip", "application/json", "text/html"}
 	headerContentType := ctx.GetHeader("Content-Type")
 
-	if !strings.Contains(headerContentType, "application/json") {
+	if !slices.Contains(contentTypeHeadersAllowed, headerContentType) {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}
