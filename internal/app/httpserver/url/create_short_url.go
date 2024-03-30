@@ -47,7 +47,8 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 
 func (r *urlRouter) checkHeaderContentType(value string) bool {
 	isTextPlain := strings.Contains(value, "text/plain")
-	isTextHtml := strings.Contains(value, "text/html")
+	isTextHTML := strings.Contains(value, "text/html")
+	isXGzip := strings.Contains(value, "application/x-gzip")
 
-	return isTextPlain || isTextHtml
+	return isTextPlain || isTextHTML || isXGzip
 }

@@ -47,7 +47,7 @@ func DecompressMiddleware(logger log.LogClient) gin.HandlerFunc {
 
 func checkHeaderContentType(value string) bool {
 	isApplicationGzip := strings.Contains(value, "application/x-gzip")
-	isTextHtml := strings.Contains(value, "text/html")
+	isTextHTML := strings.Contains(value, "text/html")
 
-	return isApplicationGzip || isTextHtml
+	return isApplicationGzip || isTextHTML
 }
