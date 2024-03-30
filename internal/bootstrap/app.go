@@ -22,7 +22,7 @@ func RunApp(ctx context.Context, cfg *config.Values, logger log.LogClient) {
 		panic(fmt.Errorf("http server can't start %w", err))
 	}
 
-	storageInstance := storage.NewStorage()
+	storageInstance := storage.NewStorage(cfg.FileStoragePath, logger)
 	storageProvider := provider.NewStorageProvider(storageInstance)
 	urlUseCase := url.NewUseCase(storageProvider, cfg.Hostname)
 	validatorInstance := validator.New()

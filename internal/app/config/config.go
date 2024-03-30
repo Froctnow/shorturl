@@ -7,9 +7,10 @@ import (
 )
 
 type Values struct {
-	Address  string `env:"SERVER_ADDRESS" envSeparator:":"`
-	Hostname string `env:"BASE_URL" envSeparator:":"`
-	LogLevel string `env:"LOG_LEVEL" envSeparator:":"`
+	Address         string `env:"SERVER_ADDRESS" envSeparator:":"`
+	Hostname        string `env:"BASE_URL" envSeparator:":"`
+	LogLevel        string `env:"LOG_LEVEL" envSeparator:":"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
 }
 
 func NewConfig() (*Values, error) {
@@ -17,6 +18,7 @@ func NewConfig() (*Values, error) {
 	address := flag.String("a", "", "address of service")
 	hostname := flag.String("b", "", "hostname of service")
 	logLevel := flag.String("loglevel", "", "level of logs")
+	fileStoragePath := flag.String("f", "", "file path to the storage file")
 
 	err := env.Parse(&cfg)
 
@@ -48,6 +50,14 @@ func NewConfig() (*Values, error) {
 		}
 
 		cfg.LogLevel = *logLevel
+	}
+
+	if cfg.FileStoragePath == "" {
+		if *fileStoragePath == "" {
+			*fileStoragePath = ""
+		}
+
+		cfg.FileStoragePath = *fileStoragePath
 	}
 
 	return &cfg, nil

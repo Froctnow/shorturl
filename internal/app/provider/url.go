@@ -6,10 +6,14 @@ import (
 
 func (p *StorageProvider) CreateURL(
 	url string,
-) *storage.URLEntity {
-	entity := p.storageInstance.URLRepository.CreateEntity(&storage.URLEntityDto{URL: url})
+) (*storage.URLEntity, error) {
+	entity, err := p.storageInstance.URLRepository.CreateEntity(&storage.URLEntityDto{URL: url})
 
-	return entity
+	if err != nil {
+		return nil, err
+	}
+
+	return entity, nil
 }
 
 func (p *StorageProvider) GetURL(

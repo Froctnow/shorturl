@@ -20,6 +20,6 @@ func NewUseCase(
 }
 
 type UseCase interface {
-	CreateShortURL(url string) string
+	CreateShortURL(url string) (string, error)
 	GetShortURL(alias string) (string, error)
 }

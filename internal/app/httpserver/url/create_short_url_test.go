@@ -21,7 +21,7 @@ const ServerURL = "http://localhost:8080"
 func TestUrlRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
-	storageMock := storage.NewStorage()
+	storageMock := storage.NewStorage("", nil)
 	shortenerProvider := provider.NewStorageProvider(storageMock)
 	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
 	ginEngine.Use(gin.Recovery())

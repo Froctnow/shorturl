@@ -19,7 +19,7 @@ import (
 func TestUrlRouter_GetShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
-	storageMock := storage.NewStorage()
+	storageMock := storage.NewStorage("", nil)
 	shortenerProvider := provider.NewStorageProvider(storageMock)
 	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
 	ginEngine.Use(gin.Recovery())
@@ -63,7 +63,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 	t.Run("success get short url", func(t *testing.T) {
 		redirectURL := "https://practicum.yandex.ru/"
 		urlEntityDto := &storage.URLEntityDto{URL: redirectURL}
-		urlEntity := storageMock.URLRepository.CreateEntity(urlEntityDto)
+		urlEntity, _ := storageMock.URLRepository.CreateEntity(urlEntityDto)
 		target := "/" + urlEntity.ID
 
 		request := httptest.NewRequest(http.MethodGet, target, nil)
