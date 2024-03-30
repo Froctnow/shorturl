@@ -28,6 +28,8 @@ func NewShortenerServer(
 
 	apiGroup := ginEngine.Group("/")
 	apiGroup.Use(middleware.LoggingMiddleware(logger))
+	apiGroup.Use(middleware.DecompressMiddleware(logger))
+	apiGroup.Use(middleware.CompressMiddleware())
 
 	return &shortenerServer{
 		urlhttp.NewURLRouter(apiGroup, urlUseCase),

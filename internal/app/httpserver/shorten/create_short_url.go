@@ -1,7 +1,6 @@
 package shorten
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
@@ -19,7 +18,6 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 
 	var req httpmodels.CreateURLRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
-		fmt.Println("ERROR THERE 1", err.Error())
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: err.Error()})
 		return
 	}
