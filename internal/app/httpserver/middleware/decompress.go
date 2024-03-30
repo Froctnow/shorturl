@@ -9,20 +9,22 @@ import (
 	"net/http"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/log"
+	"strings"
 )
 
 func DecompressMiddleware(logger log.LogClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		headerContentEncoding := c.GetHeader("Content-Encoding")
 
-		if headerContentEncoding != "gzip" {
+		if !strings.Contains(headerContentEncoding, "gzip") {
 			c.Next()
 			return
 		}
 
 		headerContentType := c.GetHeader("Content-Type")
+		isCorrectContentType := checkHeaderContentType(headerContentType)
 
-		if headerContentType != "application/json" && headerContentType != "text/html" {
+		if !isCorrectContentType {
 			c.Next()
 			return
 		}
@@ -39,5 +41,13 @@ func DecompressMiddleware(logger log.LogClient) gin.HandlerFunc {
 		}
 
 		c.Request.Body = io.NopCloser(&decompressedData)
+		c.Next()
 	}
+}
+
+func checkHeaderContentType(value string) bool {
+	isApplicationGzip := strings.Contains(value, "application/x-gzip")
+	isTextHtml := strings.Contains(value, "text/html")
+
+	return isApplicationGzip || isTextHtml
 }
