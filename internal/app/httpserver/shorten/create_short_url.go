@@ -12,7 +12,7 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 	headerContentType := ctx.GetHeader("Content-Type")
 	isCorrectHeaderContentType := r.checkHeaderContentType(headerContentType)
 
-	if isCorrectHeaderContentType {
+	if !isCorrectHeaderContentType {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}
@@ -37,8 +37,8 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 }
 
 func (r *shortenRouter) checkHeaderContentType(value string) bool {
-	isTextPlain := !strings.Contains(value, "application/json")
-	isXGzip := !strings.Contains(value, "application/x-gzip")
+	isTextPlain := strings.Contains(value, "application/json")
+	isXGzip := strings.Contains(value, "application/x-gzip")
 
-	return isTextPlain && isXGzip
+	return isTextPlain || isXGzip
 }

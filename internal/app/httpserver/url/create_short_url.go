@@ -14,7 +14,7 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 	headerContentType := ctx.GetHeader("Content-Type")
 	isCorrectHeaderContentType := r.checkHeaderContentType(headerContentType)
 
-	if isCorrectHeaderContentType {
+	if !isCorrectHeaderContentType {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}
@@ -46,8 +46,8 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 }
 
 func (r *urlRouter) checkHeaderContentType(value string) bool {
-	isTextPlain := !strings.Contains(value, "text/plain")
-	isTextHtml := !strings.Contains(value, "text/html")
+	isTextPlain := strings.Contains(value, "text/plain")
+	isTextHtml := strings.Contains(value, "text/html")
 
-	return isTextPlain && isTextHtml
+	return isTextPlain || isTextHtml
 }
