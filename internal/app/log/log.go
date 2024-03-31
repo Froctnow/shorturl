@@ -1,6 +1,7 @@
 package log
 
 import (
+	"context"
 	"runtime/debug"
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/log/options"
@@ -39,6 +40,15 @@ type LogClient interface {
 	Fatal(err error, fields ...interface{})
 	Panic(err error, fields ...interface{})
 	Debug(msg string, fields ...interface{})
+
+	InfoCtx(ctx context.Context, msg string, fields ...interface{})
+	TraceCtx(ctx context.Context, msg string, fields ...interface{})
+	WarnCtx(ctx context.Context, msg string, fields ...interface{})
+	ErrorMessageCtx(ctx context.Context, msg string, fields ...interface{})
+	ErrorCtx(ctx context.Context, err error, fields ...interface{})
+	FatalCtx(ctx context.Context, err error, fields ...interface{})
+	PanicCtx(ctx context.Context, err error, fields ...interface{})
+	DebugCtx(ctx context.Context, msg string, fields ...interface{})
 }
 
 func (l *commonLogger) Info(msg string, fields ...interface{}) {

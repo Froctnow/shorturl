@@ -11,6 +11,7 @@ type Values struct {
 	Hostname        string `env:"BASE_URL" envSeparator:":"`
 	LogLevel        string `env:"LOG_LEVEL" envSeparator:":"`
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
+	DatabaseDSN     string `env:"DATABASE_DSN" envSeparator:":"`
 }
 
 func NewConfig() (*Values, error) {
@@ -19,6 +20,7 @@ func NewConfig() (*Values, error) {
 	hostname := flag.String("b", "", "hostname of service")
 	logLevel := flag.String("loglevel", "", "level of logs")
 	fileStoragePath := flag.String("f", "", "file path to the storage file")
+	databaseDSN := flag.String("d", "", "database DSN")
 
 	err := env.Parse(&cfg)
 
@@ -58,6 +60,14 @@ func NewConfig() (*Values, error) {
 		}
 
 		cfg.FileStoragePath = *fileStoragePath
+	}
+
+	if cfg.DatabaseDSN == "" {
+		if *databaseDSN == "" {
+			panic(fmt.Errorf("database DSN is absent"))
+		}
+
+		cfg.DatabaseDSN = *databaseDSN
 	}
 
 	return &cfg, nil
