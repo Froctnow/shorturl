@@ -21,6 +21,9 @@ func New(cfg *config.Values, log log.LogClient) (pgclient.PGClient, error) {
 	if cfg == nil {
 		return nil, fmt.Errorf("invalid pg config")
 	}
+	if cfg.DatabaseDSN == "" {
+		return nil, nil
+	}
 	connString := cfg.DatabaseDSN
 	configValues := pgclient.PostgreSQL{
 		ConnString:     connString,

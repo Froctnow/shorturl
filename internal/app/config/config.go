@@ -64,7 +64,7 @@ func NewConfig() (*Values, error) {
 
 	if cfg.DatabaseDSN == "" {
 		if *databaseDSN == "" {
-			panic(fmt.Errorf("database DSN is absent"))
+			*databaseDSN = ""
 		}
 
 		cfg.DatabaseDSN = *databaseDSN
