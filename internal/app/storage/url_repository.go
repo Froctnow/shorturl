@@ -73,7 +73,7 @@ func (ur *URLRepository) writeToFile(urlEntity *URLEntity) error {
 
 	defer file.Close()
 
-	URLFromFileJSON, err := json.Marshal(models.URLFromFile{Uuid: urlEntity.ID, ShortURL: urlEntity.ID, OriginURL: urlEntity.URL})
+	URLFromFileJSON, err := json.Marshal(models.URLFromFile{UUID: urlEntity.ID, ShortURL: urlEntity.ID, OriginURL: urlEntity.URL})
 
 	if err != nil {
 		return fmt.Errorf("can't marshal URL, err %w", err)
