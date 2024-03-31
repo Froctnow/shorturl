@@ -24,7 +24,7 @@ func NewStorage(filePath string, logger log.LogClient) *Instance {
 
 	if filePath != "" {
 		fullFileStoragePath = filepath.Join(
-			"tmp", pathChunks[len(pathChunks)-1])
+			"temp", pathChunks[len(pathChunks)-1])
 	}
 
 	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
@@ -43,10 +43,10 @@ func initFromFile(storageFilePath string, storage *Instance, logger log.LogClien
 	if err != nil && errors.Is(err, os.ErrNotExist) {
 		logger.Info(fmt.Sprintf("File not exists, try to create a new file. Path %s", storageFilePath))
 
-		_, err := os.Stat("tmp")
+		_, err := os.Stat("temp")
 
 		if err != nil && errors.Is(err, os.ErrNotExist) {
-			err := os.Mkdir("tmp", 0700)
+			err := os.Mkdir("temp", 0700)
 
 			if err != nil {
 				logger.Error(fmt.Errorf("can't create dir for storage, err %w", err))
