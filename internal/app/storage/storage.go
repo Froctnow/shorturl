@@ -18,10 +18,13 @@ type Instance struct {
 
 func NewStorage(filePath string, logger log.LogClient) *Instance {
 	fullFileStoragePath := ""
+	// Берем за основу мысль, что расположение папки всегда tmp, исходя из ТЗ
+	// Значит нас интересует только название файла
+	pathChunks := strings.Split(filePath, "/")
 
 	if filePath != "" {
 		fullFileStoragePath = filepath.Join(
-			os.TempDir(), filePath)
+			os.TempDir(), "tmp", pathChunks[len(pathChunks)-1])
 	}
 
 	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
@@ -40,10 +43,11 @@ func initFromFile(storageFilePath string, storage *Instance, logger log.LogClien
 	if err != nil && errors.Is(err, os.ErrNotExist) {
 		logger.Info(fmt.Sprintf("File not exists, try to create a new file. Path %s", storageFilePath))
 
-		_, err := os.Stat(filepath.Join(os.TempDir(), "tmp"))
+		dirPath := filepath.Join(os.TempDir(), "tmp")
+		_, err := os.Stat(dirPath)
 
 		if err != nil && errors.Is(err, os.ErrNotExist) {
-			err := os.Mkdir(filepath.Join(os.TempDir(), "tmp"), 0700)
+			err := os.Mkdir(dirPath, 0700)
 
 			if err != nil {
 				logger.Error(fmt.Errorf("can't create dir for storage, err %w", err))
