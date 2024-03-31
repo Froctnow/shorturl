@@ -14,5 +14,5 @@ func (r *metricsRouter) Ping(ctx *gin.Context) {
 		return
 	}
 
-	ctx.String(http.StatusCreated, "OK")
+	ctx.String(http.StatusOK, "OK")
 }
