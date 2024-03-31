@@ -16,24 +16,24 @@ type Instance struct {
 	URLRepository IURLRepository
 }
 
-func NewStorage(fileName string, logger log.LogClient) *Instance {
+func NewStorage(filePath string, logger log.LogClient) *Instance {
 	fullFileStoragePath := ""
 
-	if fileName != "" {
+	if filePath != "" {
 		fullFileStoragePath = filepath.Join(
-			os.TempDir(), "tmp", fileName)
+			os.TempDir(), filePath)
 	}
 
 	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
 
-	if fileName != "" {
-		initFromFile(fileName, fullFileStoragePath, storage, logger)
+	if filePath != "" {
+		initFromFile(fullFileStoragePath, storage, logger)
 	}
 
 	return storage
 }
 
-func initFromFile(fileName string, storageFilePath string, storage *Instance, logger log.LogClient) {
+func initFromFile(storageFilePath string, storage *Instance, logger log.LogClient) {
 	logger.Info("Start init storage from file")
 	_, err := os.Stat(storageFilePath)
 
