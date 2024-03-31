@@ -7,7 +7,6 @@ import (
 	"io"
 	"os"
 	"path/filepath"
-	"runtime"
 	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider/models"
 	"strings"
@@ -17,31 +16,41 @@ type Instance struct {
 	URLRepository IURLRepository
 }
 
-func NewStorage(fileStoragePath string, logger log.LogClient) *Instance {
-	var (
-		_, b, _, _ = runtime.Caller(0)
-		basepath   = filepath.Dir(b)
-	)
+func NewStorage(fileName string, logger log.LogClient) *Instance {
 	fullFileStoragePath := ""
 
-	if fileStoragePath != "" {
-		fullFileStoragePath = basepath + fileStoragePath
+	if fileName != "" {
+		fullFileStoragePath = filepath.Join(
+			os.TempDir(), "tmp", fileName)
 	}
 
 	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
 
-	if fileStoragePath != "" {
-		initFromFile(fullFileStoragePath, storage, logger)
+	if fileName != "" {
+		initFromFile(fileName, fullFileStoragePath, storage, logger)
 	}
 
 	return storage
 }
 
-func initFromFile(storageFilePath string, storage *Instance, logger log.LogClient) {
+func initFromFile(fileName string, storageFilePath string, storage *Instance, logger log.LogClient) {
+	logger.Info("Start init storage from file")
 	_, err := os.Stat(storageFilePath)
 
 	if err != nil && errors.Is(err, os.ErrNotExist) {
-		fmt.Println(storageFilePath)
+		logger.Info(fmt.Sprintf("File not exists, try to create a new file. Path %s", storageFilePath))
+
+		_, err := os.Stat(filepath.Join(os.TempDir(), "tmp"))
+
+		if err != nil && errors.Is(err, os.ErrNotExist) {
+			err := os.Mkdir(filepath.Join(os.TempDir(), "tmp"), 0700)
+
+			if err != nil {
+				logger.Error(fmt.Errorf("can't create dir for storage, err %w", err))
+				return
+			}
+		}
+
 		file, err := os.Create(storageFilePath)
 
 		if err != nil {
@@ -50,6 +59,8 @@ func initFromFile(storageFilePath string, storage *Instance, logger log.LogClien
 		}
 
 		defer file.Close()
+
+		logger.Info("File has been created")
 
 		return
 	}
@@ -97,4 +108,6 @@ func initFromFile(storageFilePath string, storage *Instance, logger log.LogClien
 
 		storage.URLRepository.AddEntity(&URLEntity{ID: URLFromFile.ShortURL, URL: URLFromFile.OriginURL})
 	}
+
+	logger.Info("Init from file has been finished successfully")
 }
