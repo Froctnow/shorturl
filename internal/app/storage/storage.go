@@ -6,7 +6,6 @@ import (
 	"github.com/pkg/errors"
 	"io"
 	"os"
-	"path/filepath"
 	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider/models"
 	"strings"
@@ -17,20 +16,10 @@ type Instance struct {
 }
 
 func NewStorage(filePath string, logger log.LogClient) *Instance {
-	fullFileStoragePath := ""
-	// Берем за основу мысль, что расположение папки всегда tmp, исходя из ТЗ
-	// Значит нас интересует только название файла
-	pathChunks := strings.Split(filePath, "/")
+	storage := &Instance{URLRepository: NewURLRepository(filePath)}
 
 	if filePath != "" {
-		fullFileStoragePath = filepath.Join(
-			"tmp", pathChunks[len(pathChunks)-1])
-	}
-
-	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
-
-	if filePath != "" {
-		initFromFile(fullFileStoragePath, storage, logger)
+		initFromFile(filePath, storage, logger)
 	}
 
 	return storage
