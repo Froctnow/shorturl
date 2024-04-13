@@ -1,9 +1,10 @@
 package log
 
 import (
+	"shorturl/internal/app/log/formatter"
+
 	"github.com/sirupsen/logrus"
 	"github.com/wI2L/jettison"
-	"shorturl/internal/app/log/formatter"
 )
 
 type ConsoleOptions struct {

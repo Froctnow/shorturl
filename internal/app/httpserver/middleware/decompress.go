@@ -4,12 +4,13 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/log"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func DecompressMiddleware(logger log.LogClient) gin.HandlerFunc {

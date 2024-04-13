@@ -1,13 +1,14 @@
 package httpserver
 
 import (
-	"github.com/gin-gonic/gin"
 	"shorturl/internal/app/httpserver/middleware"
 	shortenhttp "shorturl/internal/app/httpserver/shorten"
 	urlhttp "shorturl/internal/app/httpserver/url"
 	"shorturl/internal/app/log"
 	urlusecase "shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShortenerServer interface {

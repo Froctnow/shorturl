@@ -1,9 +1,10 @@
 package shorten
 
 import (
-	"github.com/gin-gonic/gin"
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShortenRouter interface {

@@ -1,8 +1,9 @@
 package validator
 
 import (
-	"github.com/gobuffalo/validate"
 	httpmodels "shorturl/internal/app/httpserver/models"
+
+	"github.com/gobuffalo/validate"
 )
 
 type validator struct{}

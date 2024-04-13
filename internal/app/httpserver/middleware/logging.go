@@ -6,9 +6,10 @@ import (
 	"io"
 	"time"
 
+	"shorturl/internal/app/log"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"shorturl/internal/app/log"
 )
 
 func LoggingMiddleware(logger log.LogClient) gin.HandlerFunc {

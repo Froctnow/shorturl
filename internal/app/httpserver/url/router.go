@@ -1,8 +1,9 @@
 package url
 
 import (
-	"github.com/gin-gonic/gin"
 	"shorturl/internal/app/usecase/url"
+
+	"github.com/gin-gonic/gin"
 )
 
 type URLRouter interface {

@@ -1,11 +1,12 @@
 package shorten
 
 import (
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
 func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {

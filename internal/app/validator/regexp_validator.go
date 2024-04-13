@@ -2,9 +2,10 @@ package validator
 
 import (
 	"fmt"
-	"github.com/gobuffalo/validate"
 	"regexp"
 	"strings"
+
+	"github.com/gobuffalo/validate"
 )
 
 type RegexpValidator struct {
