@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"shorturl/pkg/logger"
 	"time"
 
 	"github.com/gin-gonic/gin"

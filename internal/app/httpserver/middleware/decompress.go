@@ -7,6 +7,7 @@ import (
 	"io"
 	"net/http"
 	httpmodels "shorturl/internal/app/httpserver/models"
+	"shorturl/pkg/logger"
 	"strings"
 
 	"github.com/gin-gonic/gin"

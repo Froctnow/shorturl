@@ -6,6 +6,7 @@ import (
 	urlhttp "shorturl/internal/app/httpserver/url"
 	urlusecase "shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+	"shorturl/pkg/logger"
 
 	"github.com/gin-gonic/gin"
 )

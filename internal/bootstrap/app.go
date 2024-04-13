@@ -11,6 +11,7 @@ import (
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+	"shorturl/pkg/logger"
 	"syscall"
 )
 
