@@ -2,9 +2,10 @@ package validator
 
 import (
 	"fmt"
-	"github.com/gobuffalo/validate"
 	"strings"
 	"unicode/utf8"
+
+	"github.com/gobuffalo/validate"
 )
 
 type StringLenGreaterThenValidator struct {

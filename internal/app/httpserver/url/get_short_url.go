@@ -1,11 +1,12 @@
 package url
 
 import (
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
 )
 
 func (r *urlRouter) GetShortURL(ctx *gin.Context) {

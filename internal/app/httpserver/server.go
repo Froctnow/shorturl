@@ -1,32 +1,29 @@
 package httpserver
 
 import (
-	"github.com/gin-gonic/gin"
-	metricshttp "shorturl/internal/app/httpserver/metrics"
 	"shorturl/internal/app/httpserver/middleware"
 	shortenhttp "shorturl/internal/app/httpserver/shorten"
 	urlhttp "shorturl/internal/app/httpserver/url"
-	"shorturl/internal/app/log"
-	"shorturl/internal/app/usecase/metrics"
 	urlusecase "shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+	"shorturl/pkg/logger"
+
+	"github.com/gin-gonic/gin"
 )
 
 type ShortenerServer interface {
 }
 
 type shortenerServer struct {
-	urlhttp.URLRouter
-	shortenhttp.ShortenRouter
-	metricshttp.MetricsRouter
+	urlRouter       urlhttp.Router
+	shortenerRouter shortenhttp.Router
 }
 
 func NewShortenerServer(
 	ginEngine *gin.Engine,
 	urlUseCase urlusecase.UseCase,
-	logger log.LogClient,
+	logger logger.LogClient,
 	validator validator.Validator,
-	metricsUseCase metrics.UseCase,
 ) ShortenerServer {
 	ginEngine.Use(gin.Recovery())
 
@@ -36,8 +33,7 @@ func NewShortenerServer(
 	apiGroup.Use(middleware.CompressMiddleware())
 
 	return &shortenerServer{
-		urlhttp.NewURLRouter(apiGroup, urlUseCase),
-		shortenhttp.NewShortenRouter(apiGroup, urlUseCase, validator),
-		metricshttp.NewMetricsRouter(apiGroup, metricsUseCase),
+		urlhttp.NewRouter(apiGroup, urlUseCase),
+		shortenhttp.NewRouter(apiGroup, urlUseCase, validator),
 	}
 }

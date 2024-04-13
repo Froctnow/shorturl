@@ -2,9 +2,6 @@ package url
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/google/uuid"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +11,10 @@ import (
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/google/uuid"
+	"github.com/stretchr/testify/assert"
 )
 
 func TestUrlRouter_GetShortURL(t *testing.T) {
@@ -26,7 +27,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 
 	apiGroup := ginEngine.Group("/")
 
-	_ = NewURLRouter(apiGroup, urlUseCase)
+	_ = NewRouter(apiGroup, urlUseCase)
 
 	t.Run("test :id like uuid", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/not_uuid", nil)

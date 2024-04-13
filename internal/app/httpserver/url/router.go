@@ -1,11 +1,12 @@
 package url
 
 import (
-	"github.com/gin-gonic/gin"
 	"shorturl/internal/app/usecase/url"
+
+	"github.com/gin-gonic/gin"
 )
 
-type URLRouter interface {
+type Router interface {
 	CreateShortURL(c *gin.Context)
 	GetShortURL(c *gin.Context)
 }
@@ -14,10 +15,10 @@ type urlRouter struct {
 	urlUseCase url.UseCase
 }
 
-func NewURLRouter(
+func NewRouter(
 	ginGroup *gin.RouterGroup,
 	urlUseCase url.UseCase,
-) URLRouter {
+) Router {
 	router := &urlRouter{
 		urlUseCase: urlUseCase,
 	}

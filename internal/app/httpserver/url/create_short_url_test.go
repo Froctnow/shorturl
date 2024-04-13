@@ -2,8 +2,6 @@ package url
 
 import (
 	"encoding/json"
-	"github.com/gin-gonic/gin"
-	"github.com/stretchr/testify/assert"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -14,6 +12,9 @@ import (
 	"shorturl/internal/app/usecase/url"
 	"strings"
 	"testing"
+
+	"github.com/gin-gonic/gin"
+	"github.com/stretchr/testify/assert"
 )
 
 const ServerURL = "http://localhost:8080"
@@ -28,7 +29,7 @@ func TestUrlRouter_CreateShortURL(t *testing.T) {
 
 	apiGroup := ginEngine.Group("/")
 
-	_ = NewURLRouter(apiGroup, urlUseCase)
+	_ = NewRouter(apiGroup, urlUseCase)
 
 	t.Run("incorrect content-type", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodPost, "/", nil)

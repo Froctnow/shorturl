@@ -3,40 +3,30 @@ package storage
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/pkg/errors"
 	"io"
 	"os"
-	"path/filepath"
-	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider/models"
+	"shorturl/pkg/logger"
 	"strings"
+
+	"github.com/pkg/errors"
 )
 
 type Instance struct {
 	URLRepository IURLRepository
 }
 
-func NewStorage(filePath string, logger log.LogClient) *Instance {
-	fullFileStoragePath := ""
-	// Берем за основу мысль, что расположение папки всегда tmp, исходя из ТЗ
-	// Значит нас интересует только название файла
-	pathChunks := strings.Split(filePath, "/")
+func NewStorage(filePath string, logger logger.LogClient) *Instance {
+	storage := &Instance{URLRepository: NewURLRepository(filePath)}
 
 	if filePath != "" {
-		fullFileStoragePath = filepath.Join(
-			"tmp", pathChunks[len(pathChunks)-1])
-	}
-
-	storage := &Instance{URLRepository: NewURLRepository(fullFileStoragePath)}
-
-	if filePath != "" {
-		initFromFile(fullFileStoragePath, storage, logger)
+		initFromFile(filePath, storage, logger)
 	}
 
 	return storage
 }
 
-func initFromFile(storageFilePath string, storage *Instance, logger log.LogClient) {
+func initFromFile(storageFilePath string, storage *Instance, logger logger.LogClient) {
 	logger.Info("Start init storage from file")
 	_, err := os.Stat(storageFilePath)
 

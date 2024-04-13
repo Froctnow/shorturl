@@ -3,6 +3,7 @@ package middleware
 import (
 	"compress/gzip"
 	"fmt"
+
 	"github.com/gin-gonic/gin"
 )
 

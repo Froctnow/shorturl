@@ -4,14 +4,14 @@ import (
 	"bytes"
 	"fmt"
 	"io"
+	"shorturl/pkg/logger"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"shorturl/internal/app/log"
 )
 
-func LoggingMiddleware(logger log.LogClient) gin.HandlerFunc {
+func LoggingMiddleware(logger logger.LogClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 

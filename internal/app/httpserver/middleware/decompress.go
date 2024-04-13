@@ -4,15 +4,16 @@ import (
 	"bytes"
 	"compress/gzip"
 	"fmt"
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	httpmodels "shorturl/internal/app/httpserver/models"
-	"shorturl/internal/app/log"
+	"shorturl/pkg/logger"
 	"strings"
+
+	"github.com/gin-gonic/gin"
 )
 
-func DecompressMiddleware(logger log.LogClient) gin.HandlerFunc {
+func DecompressMiddleware(logger logger.LogClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		headerContentEncoding := c.GetHeader("Content-Encoding")
 
