@@ -29,7 +29,7 @@ func TestUrlRouter_CreateShortURL(t *testing.T) {
 
 	apiGroup := ginEngine.Group("/")
 
-	_ = NewURLRouter(apiGroup, urlUseCase)
+	_ = NewRouter(apiGroup, urlUseCase)
 
 	t.Run("incorrect content-type", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodPost, "/", nil)

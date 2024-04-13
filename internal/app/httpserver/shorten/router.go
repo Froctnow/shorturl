@@ -7,7 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ShortenRouter interface {
+type Router interface {
 	CreateShortURL(c *gin.Context)
 }
 
@@ -16,11 +16,11 @@ type shortenRouter struct {
 	validator  validator.Validator
 }
 
-func NewShortenRouter(
+func NewRouter(
 	ginGroup *gin.RouterGroup,
 	urlUseCase url.UseCase,
 	validator validator.Validator,
-) ShortenRouter {
+) Router {
 	router := &shortenRouter{
 		urlUseCase: urlUseCase,
 		validator:  validator,

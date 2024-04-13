@@ -27,7 +27,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 
 	apiGroup := ginEngine.Group("/")
 
-	_ = NewURLRouter(apiGroup, urlUseCase)
+	_ = NewRouter(apiGroup, urlUseCase)
 
 	t.Run("test :id like uuid", func(t *testing.T) {
 		request := httptest.NewRequest(http.MethodGet, "/not_uuid", nil)

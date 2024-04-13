@@ -15,8 +15,8 @@ type ShortenerServer interface {
 }
 
 type shortenerServer struct {
-	urlhttp.URLRouter
-	shortenhttp.ShortenRouter
+	urlRouter       urlhttp.Router
+	shortenerRouter shortenhttp.Router
 }
 
 func NewShortenerServer(
@@ -33,7 +33,7 @@ func NewShortenerServer(
 	apiGroup.Use(middleware.CompressMiddleware())
 
 	return &shortenerServer{
-		urlhttp.NewURLRouter(apiGroup, urlUseCase),
-		shortenhttp.NewShortenRouter(apiGroup, urlUseCase, validator),
+		urlhttp.NewRouter(apiGroup, urlUseCase),
+		shortenhttp.NewRouter(apiGroup, urlUseCase, validator),
 	}
 }
