@@ -4,7 +4,6 @@ import (
 	"shorturl/internal/app/httpserver/middleware"
 	shortenhttp "shorturl/internal/app/httpserver/shorten"
 	urlhttp "shorturl/internal/app/httpserver/url"
-	"shorturl/internal/app/log"
 	urlusecase "shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
 
@@ -22,7 +21,7 @@ type shortenerServer struct {
 func NewShortenerServer(
 	ginEngine *gin.Engine,
 	urlUseCase urlusecase.UseCase,
-	logger log.LogClient,
+	logger logger.LogClient,
 	validator validator.Validator,
 ) ShortenerServer {
 	ginEngine.Use(gin.Recovery())

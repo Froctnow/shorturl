@@ -6,13 +6,11 @@ import (
 	"io"
 	"time"
 
-	"shorturl/internal/app/log"
-
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
 
-func LoggingMiddleware(logger log.LogClient) gin.HandlerFunc {
+func LoggingMiddleware(logger logger.LogClient) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		start := time.Now()
 

@@ -7,7 +7,6 @@ import (
 	"os/signal"
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver"
-	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
@@ -15,7 +14,7 @@ import (
 	"syscall"
 )
 
-func RunApp(ctx context.Context, cfg *config.Values, logger log.LogClient) {
+func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 	ginEngine := NewGinEngine()
 	httpServer, err := RunHTTPServer(ginEngine, cfg)
 	if err != nil {

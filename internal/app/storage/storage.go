@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"io"
 	"os"
-	"shorturl/internal/app/log"
 	"shorturl/internal/app/provider/models"
+	"shorturl/pkg/logger"
 	"strings"
 
 	"github.com/pkg/errors"
@@ -16,7 +16,7 @@ type Instance struct {
 	URLRepository IURLRepository
 }
 
-func NewStorage(filePath string, logger log.LogClient) *Instance {
+func NewStorage(filePath string, logger logger.LogClient) *Instance {
 	storage := &Instance{URLRepository: NewURLRepository(filePath)}
 
 	if filePath != "" {
@@ -26,7 +26,7 @@ func NewStorage(filePath string, logger log.LogClient) *Instance {
 	return storage
 }
 
-func initFromFile(storageFilePath string, storage *Instance, logger log.LogClient) {
+func initFromFile(storageFilePath string, storage *Instance, logger logger.LogClient) {
 	logger.Info("Start init storage from file")
 	_, err := os.Stat(storageFilePath)
 
