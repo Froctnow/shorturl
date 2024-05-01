@@ -22,5 +22,12 @@ func (p *ShortenerDBProvider) CreateURL(
 	if err != nil {
 		return models.URL{}, fmt.Errorf("can't execute CreateURL: %w", err)
 	}
+
+	err = rows.Err()
+
+	if err != nil {
+		return models.URL{}, fmt.Errorf("can't execute CreateURL: %w", err)
+	}
+
 	return pgclient.StructValueFromRows[models.URL](rows)
 }

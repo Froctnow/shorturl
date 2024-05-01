@@ -1,4 +1,4 @@
 package config
 
-const STORAGE_MODE_DATABASE = "STORAGE_MODE_DATABASE"
-const STORAGE_MODE_MEMORY = "STORAGE_MODE_MEMORY"
+const StorageModeDatabase = "STORAGE_MODE_DATABASE"
+const StorageModeMemory = "STORAGE_MODE_MEMORY"

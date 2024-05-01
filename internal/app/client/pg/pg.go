@@ -12,7 +12,7 @@ var (
 	//go:embed queries/*
 	queryFiles embed.FS
 
-	pathsToDbQueries = []string{"queries/"}
+	pathsToDBQueries = []string{"queries/"}
 )
 
 //go:generate mockery --srcpkg=vcs.bingo-boom.ru/bb_online/go-modules/pgclient --case=underscore --name=Transaction
@@ -27,7 +27,7 @@ func New(cfg *config.Values, log logger.LogClient) (pgclient.PGClient, error) {
 	connString := cfg.DatabaseDSN
 	configValues := pgclient.PostgreSQL{
 		ConnString:     connString,
-		PathsToQueries: pathsToDbQueries,
+		PathsToQueries: pathsToDBQueries,
 		LogLevel:       pgclient.LogLevelNone,
 	}
 	return pgclient.New(configValues, log, queryFiles)

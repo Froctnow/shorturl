@@ -16,13 +16,13 @@ type Values struct {
 	StorageMode     string
 }
 
-func NewConfig() (*Values, error) {
+func NewConfig(isUseFlags bool) (*Values, error) {
 	var cfg Values
-	address := flag.String("a", "", "address of service")
-	hostname := flag.String("b", "", "hostname of service")
-	logLevel := flag.String("loglevel", "", "level of logs")
-	fileStoragePath := flag.String("f", "", "file path to the storage file")
-	databaseDSN := flag.String("d", "", "database DSN")
+	var address = new(string)
+	var hostname = new(string)
+	var logLevel = new(string)
+	var fileStoragePath = new(string)
+	var databaseDSN = new(string)
 
 	err := env.Parse(&cfg)
 
@@ -30,8 +30,15 @@ func NewConfig() (*Values, error) {
 		panic(fmt.Errorf("can't parse env %w", err))
 	}
 
-	// разбор командной строки
-	flag.Parse()
+	if isUseFlags {
+		address = flag.String("a", "", "address of service")
+		hostname = flag.String("b", "", "hostname of service")
+		logLevel = flag.String("loglevel", "", "level of logs")
+		fileStoragePath = flag.String("f", "", "file path to the storage file")
+		databaseDSN = flag.String("d", "", "database DSN")
+		// разбор командной строки
+		flag.Parse()
+	}
 
 	if cfg.Address == "" {
 		if *address == "" {
@@ -73,9 +80,9 @@ func NewConfig() (*Values, error) {
 	}
 
 	if cfg.DatabaseDSN != "" {
-		cfg.StorageMode = STORAGE_MODE_DATABASE
+		cfg.StorageMode = StorageModeDatabase
 	} else {
-		cfg.StorageMode = STORAGE_MODE_MEMORY
+		cfg.StorageMode = StorageModeMemory
 	}
 
 	return &cfg, nil

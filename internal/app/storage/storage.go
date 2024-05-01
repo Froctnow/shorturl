@@ -17,9 +17,9 @@ type Storage struct {
 
 func NewStorage(storageMode string, cfg *config.Values, logger logger.LogClient) (*Storage, shortenerprovider.ShortenerProvider) {
 	switch storageMode {
-	case config.STORAGE_MODE_DATABASE:
+	case config.StorageModeDatabase:
 		return initPgStorage(cfg, logger)
-	case config.STORAGE_MODE_MEMORY:
+	case config.StorageModeMemory:
 		return initMemoryStorage(cfg, logger), nil
 	}
 

@@ -24,12 +24,12 @@ import (
 func TestUrlRouter_GetShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
-	cfg, err := config.NewConfig()
+	cfg, err := config.NewConfig(false)
 	if err != nil {
 		panic(fmt.Errorf("config read err %w", err))
 	}
-	logger, err := log.New(*cfg)
-	storageInstance, _ := storage.NewStorage(config.STORAGE_MODE_MEMORY, cfg, logger)
+	logger, _ := log.New(*cfg)
+	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
 	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL)
 	ginEngine.Use(gin.Recovery())
 
