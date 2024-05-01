@@ -41,7 +41,7 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(url)
+	shortURL, err := r.urlUseCase.CreateShortURL(ctx, url)
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})

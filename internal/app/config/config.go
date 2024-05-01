@@ -13,6 +13,7 @@ type Values struct {
 	LogLevel        string `env:"LOG_LEVEL" envSeparator:":"`
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envSeparator:":"`
+	StorageMode     string
 }
 
 func NewConfig() (*Values, error) {
@@ -69,6 +70,12 @@ func NewConfig() (*Values, error) {
 		}
 
 		cfg.DatabaseDSN = *databaseDSN
+	}
+
+	if cfg.DatabaseDSN != "" {
+		cfg.StorageMode = STORAGE_MODE_DATABASE
+	} else {
+		cfg.StorageMode = STORAGE_MODE_MEMORY
 	}
 
 	return &cfg, nil

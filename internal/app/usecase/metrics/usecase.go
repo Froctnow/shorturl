@@ -1,15 +1,15 @@
 package metrics
 
 import (
-	"shorturl/internal/app/provider"
+	"shorturl/internal/app/shortenerprovider"
 )
 
 type metricsUseCase struct {
-	provider provider.ShortenerProvider
+	provider shortenerprovider.ShortenerProvider
 }
 
 func NewUseCase(
-	provider provider.ShortenerProvider,
+	provider shortenerprovider.ShortenerProvider,
 ) UseCase {
 	return &metricsUseCase{
 		provider: provider,

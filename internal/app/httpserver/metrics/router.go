@@ -1,11 +1,12 @@
 package metrics
 
 import (
-	"github.com/gin-gonic/gin"
 	"shorturl/internal/app/usecase/metrics"
+
+	"github.com/gin-gonic/gin"
 )
 
-type MetricsRouter interface {
+type Router interface {
 	Ping(c *gin.Context)
 }
 
@@ -13,10 +14,10 @@ type metricsRouter struct {
 	metricsUseCase metrics.UseCase
 }
 
-func NewMetricsRouter(
+func NewRouter(
 	ginGroup *gin.RouterGroup,
 	metricsUseCase metrics.UseCase,
-) MetricsRouter {
+) Router {
 	router := &metricsRouter{
 		metricsUseCase: metricsUseCase,
 	}

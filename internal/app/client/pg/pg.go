@@ -4,7 +4,7 @@ import (
 	"embed"
 	"fmt"
 	"shorturl/internal/app/config"
-	"shorturl/internal/app/log"
+	"shorturl/pkg/logger"
 	"shorturl/pkg/pgclient"
 )
 
@@ -17,7 +17,7 @@ var (
 
 //go:generate mockery --srcpkg=vcs.bingo-boom.ru/bb_online/go-modules/pgclient --case=underscore --name=Transaction
 
-func New(cfg *config.Values, log log.LogClient) (pgclient.PGClient, error) {
+func New(cfg *config.Values, log logger.LogClient) (pgclient.PGClient, error) {
 	if cfg == nil {
 		return nil, fmt.Errorf("invalid pg config")
 	}

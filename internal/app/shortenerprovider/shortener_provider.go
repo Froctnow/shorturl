@@ -1,10 +1,10 @@
-package provider
+package shortenerprovider
 
 import (
 	"fmt"
 	"reflect"
+	"shorturl/pkg/logger"
 
-	"shorturl/internal/app/log"
 	"shorturl/pkg/pgclient"
 )
 
@@ -22,7 +22,7 @@ func (p *ShortenerDBProvider) BeginTransaction() (pgclient.Transaction, error) {
 	return p.conn.BeginTransaction()
 }
 
-func (p *ShortenerDBProvider) RollbackTransaction(tx pgclient.Transaction, log log.LogClient) {
+func (p *ShortenerDBProvider) RollbackTransaction(tx pgclient.Transaction, log logger.LogClient) {
 	if tx == nil || reflect.ValueOf(tx).IsNil() {
 		return
 	}

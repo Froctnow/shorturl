@@ -18,7 +18,7 @@ func (r *urlRouter) GetShortURL(ctx *gin.Context) {
 		return
 	}
 
-	url, err := r.urlUseCase.GetShortURL(alias)
+	url, err := r.urlUseCase.GetShortURL(ctx, alias)
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusNotFound, httpmodels.ErrorResponse{Error: constants.MessageErrorShortURLNotFound})

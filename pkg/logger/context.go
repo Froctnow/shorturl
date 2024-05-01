@@ -1,4 +1,4 @@
-package log
+package logger
 
 import (
 	"context"
@@ -6,7 +6,8 @@ import (
 
 	"github.com/sirupsen/logrus"
 
-	"shorturl/internal/app/log/options"
+	"shorturl/pkg/logger/formatter"
+	"shorturl/pkg/logger/options"
 )
 
 type contextKey string
@@ -56,14 +57,14 @@ func (l *commonLogger) SetOptionsToCtx(ctx context.Context, optValues ...options
 	for _, setOption := range optValues {
 		setOption(opts)
 	}
-	return context.WithValue(ctx, contextKey("LogOptionsContextKey"), *opts)
+	return context.WithValue(ctx, contextKey(LogOptionsContextKey), *opts)
 }
 
 func (l *commonLogger) OptionsFromCtx(ctx context.Context) *options.LoggerOptions {
 	if ctx == nil {
 		return nil
 	}
-	opts, ok := ctx.Value(contextKey("LogOptionsContextKey")).(options.LoggerOptions)
+	opts, ok := ctx.Value(contextKey(LogOptionsContextKey)).(options.LoggerOptions)
 	if ok {
 		return &opts
 	}
@@ -80,5 +81,5 @@ func (l *commonLogger) setFieldsWithContext(ctx context.Context, optValues ...op
 	for _, setOption := range optValues {
 		setOption(opts)
 	}
-	return l.Console.WithField("options", *opts)
+	return l.Console.WithField(formatter.LogOptionsField, *opts)
 }

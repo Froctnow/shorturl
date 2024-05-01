@@ -1,44 +1,31 @@
-package storage
+package memorystorage
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"os"
-	"shorturl/internal/app/provider/models"
+	"shorturl/internal/app/memorystorage/models"
+	"shorturl/internal/app/repository"
 
 	"github.com/google/uuid"
 )
 
-type IURLRepository interface {
-	CreateEntity(*URLEntityDto) (*URLEntity, error)
-	GetEntity(string) *URLEntity
-	AddEntity(entity *URLEntity)
-}
-
-type URLEntity struct {
-	ID  string
-	URL string
-}
-
-type URLEntityDto struct {
-	URL string
-}
-
 type URLRepository struct {
-	table           map[string]*URLEntity
+	table           map[string]*repository.URLEntity
 	storageFilePath string
 }
 
 func NewURLRepository(storageFilePath string) *URLRepository {
-	urlRepository := &URLRepository{make(map[string]*URLEntity), storageFilePath}
+	urlRepository := &URLRepository{make(map[string]*repository.URLEntity), storageFilePath}
 
 	return urlRepository
 }
 
-func (ur *URLRepository) CreateEntity(urlEntityDto *URLEntityDto) (*URLEntity, error) {
+func (ur *URLRepository) CreateEntity(_ context.Context, urlEntityDto *repository.URLEntityDto) (*repository.URLEntity, error) {
 	ID := uuid.New().String()
 
-	entity := &URLEntity{ID: ID, URL: urlEntityDto.URL}
+	entity := &repository.URLEntity{ID: ID, URL: urlEntityDto.URL}
 
 	err := ur.writeToFile(entity)
 
@@ -51,17 +38,17 @@ func (ur *URLRepository) CreateEntity(urlEntityDto *URLEntityDto) (*URLEntity, e
 	return entity, nil
 }
 
-func (ur *URLRepository) GetEntity(key string) *URLEntity {
+func (ur *URLRepository) GetEntity(_ context.Context, key string) *repository.URLEntity {
 	entity := ur.table[key]
 
 	return entity
 }
 
-func (ur *URLRepository) AddEntity(urlEntity *URLEntity) {
+func (ur *URLRepository) AddEntity(urlEntity *repository.URLEntity) {
 	ur.table[urlEntity.ID] = urlEntity
 }
 
-func (ur *URLRepository) writeToFile(urlEntity *URLEntity) error {
+func (ur *URLRepository) writeToFile(urlEntity *repository.URLEntity) error {
 	if ur.storageFilePath == "" {
 		return nil
 	}

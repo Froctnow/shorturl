@@ -1,25 +1,27 @@
 package url
 
 import (
-	"shorturl/internal/app/provider"
+	"shorturl/internal/app/repository"
+
+	"golang.org/x/net/context"
 )
 
 type urlUseCase struct {
-	provider  provider.IStorageProvider
-	serverURL string
+	urlRepository repository.URL
+	serverURL     string
 }
 
 func NewUseCase(
-	provider provider.IStorageProvider,
+	urlRepository repository.URL,
 	serverURL string,
 ) UseCase {
 	return &urlUseCase{
-		provider:  provider,
-		serverURL: serverURL,
+		urlRepository: urlRepository,
+		serverURL:     serverURL,
 	}
 }
 
 type UseCase interface {
-	CreateShortURL(url string) (string, error)
-	GetShortURL(alias string) (string, error)
+	CreateShortURL(ctx context.Context, url string) (string, error)
+	GetShortURL(ctx context.Context, alias string) (string, error)
 }
