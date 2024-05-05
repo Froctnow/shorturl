@@ -48,6 +48,28 @@ func (ur *URLRepository) AddEntity(urlEntity *repository.URLEntity) {
 	ur.table[urlEntity.ID] = urlEntity
 }
 
+func (ur *URLRepository) CreateBatch(_ context.Context, batchDto *[]repository.BatchURLDto) (*[]repository.BatchURL, error) {
+	result := make([]repository.BatchURL, 0)
+
+	for _, urlDto := range *batchDto {
+		ID := uuid.New().String()
+
+		entity := &repository.URLEntity{ID: ID, URL: urlDto.OriginalURL}
+
+		err := ur.writeToFile(entity)
+
+		if err != nil {
+			return nil, fmt.Errorf("can't save entity, err %w", err)
+		}
+
+		ur.table[ID] = entity
+
+		result = append(result, repository.BatchURL{CorrelationID: urlDto.CorrelationID, ShortURL: ID})
+	}
+
+	return &result, nil
+}
+
 func (ur *URLRepository) writeToFile(urlEntity *repository.URLEntity) error {
 	if ur.storageFilePath == "" {
 		return nil

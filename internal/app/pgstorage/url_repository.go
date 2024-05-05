@@ -11,7 +11,7 @@ type URLRepository struct {
 	provider shortenerprovider.ShortenerProvider
 }
 
-func NewURLRepository(provider shortenerprovider.ShortenerProvider) repository.URL {
+func NewURLRepository(provider shortenerprovider.ShortenerProvider) *URLRepository {
 	urlRepository := &URLRepository{provider}
 
 	return urlRepository
@@ -39,4 +39,37 @@ func (ur *URLRepository) GetEntity(ctx context.Context, alias string) *repositor
 	result := repository.URLEntity(entity)
 
 	return &result
+}
+
+func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository.BatchURLDto) (*[]repository.BatchURL, error) {
+	entities := make([]repository.BatchURL, 0)
+	tx, err := ur.provider.BeginTransaction()
+
+	if err != nil {
+		return nil, fmt.Errorf("can't begin transaction: %w", err)
+	}
+
+	for _, e := range *batchDto {
+		entity, err := ur.provider.CreateURL(ctx, tx, e.OriginalURL)
+
+		if err != nil {
+			err = tx.Rollback()
+
+			if err != nil {
+				return nil, fmt.Errorf("can't rollback transaction: %w", err)
+			}
+
+			return nil, fmt.Errorf("can't create entity: %w", err)
+		}
+
+		entities = append(entities, repository.BatchURL{CorrelationID: e.CorrelationID, ShortURL: entity.ID})
+	}
+
+	err = tx.Commit()
+
+	if err != nil {
+		return nil, fmt.Errorf("can't commit transaction: %w", err)
+	}
+
+	return &entities, nil
 }
