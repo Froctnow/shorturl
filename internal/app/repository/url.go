@@ -1,6 +1,9 @@
 package repository
 
-import "context"
+import (
+	"context"
+	"fmt"
+)
 
 type URL interface {
 	CreateEntity(ctx context.Context, dto *URLEntityDto) (*URLEntity, error)
@@ -25,4 +28,13 @@ type BatchURL struct {
 type BatchURLDto struct {
 	CorrelationID string
 	OriginalURL   string
+}
+
+type URLDuplicateError struct {
+	URL string
+	ID  string
+}
+
+func (e URLDuplicateError) Error() string {
+	return fmt.Sprintf("duplicate URL - %s", e.URL)
 }

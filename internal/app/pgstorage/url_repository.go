@@ -24,6 +24,16 @@ func (ur *URLRepository) CreateEntity(ctx context.Context, urlEntityDto *reposit
 		return nil, fmt.Errorf("can't create entity: %w", err)
 	}
 
+	if entity.ID == "" {
+		r, err := ur.provider.GetURLID(ctx, nil, urlEntityDto.URL)
+
+		if err != nil {
+			return nil, fmt.Errorf("can't get entity ID: %w", err)
+		}
+
+		return nil, repository.URLDuplicateError{URL: urlEntityDto.URL, ID: r.ID}
+	}
+
 	result := repository.URLEntity(entity)
 
 	return &result, nil
