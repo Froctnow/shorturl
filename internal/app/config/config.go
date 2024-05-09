@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/caarlos0/env/v6"
 )
@@ -14,6 +15,8 @@ type Values struct {
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
 	DatabaseDSN     string `env:"DATABASE_DSN" envSeparator:":"`
 	StorageMode     string
+	JwtSecret       string
+	JwtTokenExpire  time.Duration
 }
 
 func NewConfig(isUseFlags bool) (*Values, error) {
@@ -84,6 +87,11 @@ func NewConfig(isUseFlags bool) (*Values, error) {
 	} else {
 		cfg.StorageMode = StorageModeMemory
 	}
+
+	cfg.JwtSecret = "supersecretkey"
+	cfg.JwtTokenExpire = time.Hour * 3
+
+	fmt.Println(cfg.LogLevel)
 
 	return &cfg, nil
 }

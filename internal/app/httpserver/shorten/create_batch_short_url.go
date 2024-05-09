@@ -29,7 +29,7 @@ func (r *shortenRouter) CreateBatchShortURL(ctx *gin.Context) {
 		return
 	}
 
-	batchURL, err := r.urlUseCase.CreateBatchShortURL(ctx, &req)
+	batchURL, err := r.urlUseCase.CreateBatchShortURL(ctx, &req, ctx.GetString("user_id"))
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})

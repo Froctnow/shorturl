@@ -32,7 +32,7 @@ func TestShortenRouter_CreateShortURL(t *testing.T) {
 	}
 	logger, _ := log.New(*cfg)
 	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
-	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL, logger)
 	ginEngine.Use(gin.Recovery())
 	validatorInstance := validator.New()
 

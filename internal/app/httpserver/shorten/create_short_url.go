@@ -31,7 +31,7 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(ctx, req.URL)
+	shortURL, err := r.urlUseCase.CreateShortURL(ctx, req.URL, ctx.GetString("user_id"))
 
 	if err != nil && errors.As(err, &repository.URLDuplicateError{}) {
 		ctx.AbortWithStatusJSON(http.StatusConflict, httpmodels.CreateURLResponse{

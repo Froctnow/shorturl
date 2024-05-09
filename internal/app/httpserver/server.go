@@ -1,6 +1,7 @@
 package httpserver
 
 import (
+	"shorturl/internal/app/config"
 	metricshttp "shorturl/internal/app/httpserver/metrics"
 	"shorturl/internal/app/httpserver/middleware"
 	shortenhttp "shorturl/internal/app/httpserver/shorten"
@@ -28,10 +29,12 @@ func NewShortenerServer(
 	logger logger.LogClient,
 	validator validator.Validator,
 	metricsUseCase metrics.UseCase,
+	cfg *config.Values,
 ) ShortenerServer {
 	ginEngine.Use(gin.Recovery())
 
 	apiGroup := ginEngine.Group("/")
+	apiGroup.Use(middleware.AccessControlMiddleware(cfg, logger))
 	apiGroup.Use(middleware.LoggingMiddleware(logger))
 	apiGroup.Use(middleware.DecompressMiddleware(logger))
 	apiGroup.Use(middleware.CompressMiddleware())

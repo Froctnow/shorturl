@@ -38,6 +38,9 @@ type LogClient interface {
 	Panic(err error, fields ...interface{})
 	Debug(msg string, fields ...interface{})
 
+	SetOptionsToCtx(ctx context.Context, options ...options.LoggerOption) context.Context
+	OptionsFromCtx(ctx context.Context) *options.LoggerOptions
+
 	InfoCtx(ctx context.Context, msg string, fields ...interface{})
 	TraceCtx(ctx context.Context, msg string, fields ...interface{})
 	WarnCtx(ctx context.Context, msg string, fields ...interface{})

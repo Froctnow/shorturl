@@ -6,7 +6,7 @@ import (
 	"shorturl/internal/app/repository"
 )
 
-func (u *urlUseCase) CreateBatchShortURL(ctx context.Context, request *[]httpmodels.CreateBatchURLRequest) (*[]repository.BatchURL, error) {
+func (u *urlUseCase) CreateBatchShortURL(ctx context.Context, request *[]httpmodels.CreateBatchURLRequest, userID string) (*[]repository.BatchURL, error) {
 	dto := make([]repository.BatchURLDto, 0)
 
 	for _, r := range *request {
@@ -16,7 +16,7 @@ func (u *urlUseCase) CreateBatchShortURL(ctx context.Context, request *[]httpmod
 		})
 	}
 
-	batchURL, err := u.urlRepository.CreateBatch(ctx, &dto)
+	batchURL, err := u.urlRepository.CreateBatch(ctx, &dto, userID)
 
 	if err != nil {
 		return nil, err

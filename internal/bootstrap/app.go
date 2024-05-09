@@ -23,7 +23,7 @@ func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 	}
 
 	storageInstance, shortenerProvider := storage.NewStorage(cfg.StorageMode, cfg, logger)
-	urlUseCase := url.NewUseCase(storageInstance.URLRepository, cfg.Hostname)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, cfg.Hostname, logger)
 	metricsUseCase := metrics.NewUseCase(shortenerProvider)
 	validatorInstance := validator.New()
 
@@ -33,6 +33,7 @@ func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 		logger,
 		validatorInstance,
 		metricsUseCase,
+		cfg,
 	)
 
 	exit := make(chan os.Signal, 1)

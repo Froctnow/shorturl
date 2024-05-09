@@ -43,7 +43,7 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(ctx, url)
+	shortURL, err := r.urlUseCase.CreateShortURL(ctx, url, ctx.GetString("user_id"))
 
 	if err != nil && errors.As(err, &repository.URLDuplicateError{}) {
 		ctx.String(http.StatusConflict, err.(repository.URLDuplicateError).URL)

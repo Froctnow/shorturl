@@ -30,6 +30,7 @@ func NewRouter(
 	urlGroup := ginGroup.Group("/api")
 	urlGroup.POST("/shorten", router.CreateShortURL)
 	urlGroup.POST("/shorten/batch", router.CreateBatchShortURL)
+	urlGroup.GET("/user/urls", router.GetUserURLS)
 
 	return router
 }

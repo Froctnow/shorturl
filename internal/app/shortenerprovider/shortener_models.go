@@ -12,6 +12,7 @@ type ShortenerProvider interface {
 		ctx context.Context,
 		tx pgclient.Transaction,
 		URL string,
+		UserID string,
 	) (models.URL, error)
 
 	GetURL(
@@ -25,6 +26,12 @@ type ShortenerProvider interface {
 		tx pgclient.Transaction,
 		alias string,
 	) (models.URLID, error)
+
+	GetUserURLs(
+		ctx context.Context,
+		tx pgclient.Transaction,
+		UserID string,
+	) ([]models.URL, error)
 
 	BeginTransaction() (pgclient.Transaction, error)
 	RollbackTransaction(tx pgclient.Transaction, log logger.LogClient)

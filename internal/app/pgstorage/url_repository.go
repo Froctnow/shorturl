@@ -18,7 +18,7 @@ func NewURLRepository(provider shortenerprovider.ShortenerProvider) *URLReposito
 }
 
 func (ur *URLRepository) CreateEntity(ctx context.Context, urlEntityDto *repository.URLEntityDto) (*repository.URLEntity, error) {
-	entity, err := ur.provider.CreateURL(ctx, nil, urlEntityDto.URL)
+	entity, err := ur.provider.CreateURL(ctx, nil, urlEntityDto.URL, urlEntityDto.UserID)
 
 	if err != nil {
 		return nil, fmt.Errorf("can't create entity: %w", err)
@@ -51,7 +51,7 @@ func (ur *URLRepository) GetEntity(ctx context.Context, alias string) *repositor
 	return &result
 }
 
-func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository.BatchURLDto) (*[]repository.BatchURL, error) {
+func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository.BatchURLDto, userID string) (*[]repository.BatchURL, error) {
 	entities := make([]repository.BatchURL, 0)
 	tx, err := ur.provider.BeginTransaction()
 
@@ -60,7 +60,7 @@ func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository
 	}
 
 	for _, e := range *batchDto {
-		entity, err := ur.provider.CreateURL(ctx, tx, e.OriginalURL)
+		entity, err := ur.provider.CreateURL(ctx, tx, e.OriginalURL, userID)
 
 		if err != nil {
 			err = tx.Rollback()
@@ -79,6 +79,21 @@ func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository
 
 	if err != nil {
 		return nil, fmt.Errorf("can't commit transaction: %w", err)
+	}
+
+	return &entities, nil
+}
+
+func (ur *URLRepository) GetUserURLs(ctx context.Context, userID string) (*[]repository.UserURL, error) {
+	entities := make([]repository.UserURL, 0)
+	urls, err := ur.provider.GetUserURLs(ctx, nil, userID)
+
+	if err != nil {
+		return nil, fmt.Errorf("can't get user URLs: %w", err)
+	}
+
+	for _, e := range urls {
+		entities = append(entities, repository.UserURL{ShortURL: e.ID, OriginURL: e.URL})
 	}
 
 	return &entities, nil

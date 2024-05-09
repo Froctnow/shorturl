@@ -30,7 +30,7 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 	}
 	logger, _ := log.New(*cfg)
 	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
-	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL, logger)
 	ginEngine.Use(gin.Recovery())
 
 	apiGroup := ginEngine.Group("/")
