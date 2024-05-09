@@ -1,7 +1,6 @@
 package validator
 
 import (
-	"fmt"
 	"strings"
 
 	"github.com/gobuffalo/validate"
@@ -17,7 +16,7 @@ func (v *ArrayNotEmpty[T]) IsValid(errors *validate.Errors) {
 	lengthArray := len(v.Array)
 
 	if v.Message == "" {
-		v.Message = fmt.Sprintf("Array is empty")
+		v.Message = "Array is empty"
 	}
 
 	if lengthArray == 0 {
