@@ -10,29 +10,28 @@ import (
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
+	"shorturl/internal/app/validator"
+	"shorturl/pkg/logger"
 	"syscall"
 )
 
-func RunApp(ctx context.Context) {
-	cfg, err := config.NewConfig()
-
-	if err != nil {
-		panic(fmt.Errorf("config read err %w", err))
-	}
-
+func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 	ginEngine := NewGinEngine()
 	httpServer, err := RunHTTPServer(ginEngine, cfg)
 	if err != nil {
 		panic(fmt.Errorf("http server can't start %w", err))
 	}
 
-	storageInstance := storage.NewStorage()
+	storageInstance := storage.NewStorage(cfg.FileStoragePath, logger)
 	storageProvider := provider.NewStorageProvider(storageInstance)
 	urlUseCase := url.NewUseCase(storageProvider, cfg.Hostname)
+	validatorInstance := validator.New()
 
 	_ = httpserver.NewShortenerServer(
 		ginEngine,
 		urlUseCase,
+		logger,
+		validatorInstance,
 	)
 
 	exit := make(chan os.Signal, 1)

@@ -1,21 +1,22 @@
 package url
 
 import (
-	"github.com/gin-gonic/gin"
 	"io"
 	"net/http"
 	"regexp"
+	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"strings"
-)
 
-const RegexpURL = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
+	"github.com/gin-gonic/gin"
+)
 
 func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 	headerContentType := ctx.GetHeader("Content-Type")
+	isCorrectHeaderContentType := r.checkHeaderContentType(headerContentType)
 
-	if !strings.Contains(headerContentType, "text/plain") {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: MessageErrorIncorrectContentType})
+	if !isCorrectHeaderContentType {
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectContentType})
 		return
 	}
 
@@ -28,10 +29,10 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 
 	url := string(body)
 
-	isMatched, err := regexp.MatchString(RegexpURL, url)
+	isMatched, err := regexp.MatchString(constants.RegexpURL, url)
 
 	if !isMatched {
-		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: MessageErrorIncorrectURL})
+		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: constants.MessageErrorIncorrectURL})
 		return
 	}
 
@@ -40,7 +41,20 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL := r.urlUseCase.CreateShortURL(url)
+	shortURL, err := r.urlUseCase.CreateShortURL(url)
+
+	if err != nil {
+		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})
+		return
+	}
 
 	ctx.String(http.StatusCreated, shortURL)
+}
+
+func (r *urlRouter) checkHeaderContentType(value string) bool {
+	isTextPlain := strings.Contains(value, "text/plain")
+	isTextHTML := strings.Contains(value, "text/html")
+	isXGzip := strings.Contains(value, "application/x-gzip")
+
+	return isTextPlain || isTextHTML || isXGzip
 }

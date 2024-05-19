@@ -5,8 +5,12 @@ go 1.21.3
 require (
 	github.com/caarlos0/env/v6 v6.10.1
 	github.com/gin-gonic/gin v1.9.1
+	github.com/gobuffalo/validate v2.0.4+incompatible
 	github.com/google/uuid v1.4.0
+	github.com/pkg/errors v0.9.1
+	github.com/sirupsen/logrus v1.9.3
 	github.com/stretchr/testify v1.8.4
+	github.com/wI2L/jettison v0.7.4
 )
 
 require (

@@ -1,16 +1,18 @@
-package url
+package shorten
 
 import (
+	"bytes"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
 	"shorturl/internal/app/httpserver/constants"
-	"shorturl/internal/app/httpserver/models"
+	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
-	"strings"
+	"shorturl/internal/app/validator"
 	"testing"
 
 	"github.com/gin-gonic/gin"
@@ -18,27 +20,29 @@ import (
 )
 
 const ServerURL = "http://localhost:8080"
+const targetRoute = "/api/shorten"
 
-func TestUrlRouter_CreateShortURL(t *testing.T) {
+func TestShortenRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
 	storageMock := storage.NewStorage("", nil)
 	shortenerProvider := provider.NewStorageProvider(storageMock)
 	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
 	ginEngine.Use(gin.Recovery())
+	validatorInstance := validator.New()
 
 	apiGroup := ginEngine.Group("/")
 
-	_ = NewRouter(apiGroup, urlUseCase)
+	_ = NewRouter(apiGroup, urlUseCase, validatorInstance)
 
 	t.Run("incorrect content-type", func(t *testing.T) {
-		request := httptest.NewRequest(http.MethodPost, "/", nil)
+		request := httptest.NewRequest(http.MethodPost, targetRoute, nil)
 		w := httptest.NewRecorder()
 		ginEngine.ServeHTTP(w, request)
 
 		result := w.Result()
 		defer result.Body.Close()
-		var errResponse models.ErrorResponse
+		var errResponse httpmodels.ErrorResponse
 		errResult, _ := io.ReadAll(result.Body)
 		json.Unmarshal(errResult, &errResponse)
 
@@ -47,27 +51,29 @@ func TestUrlRouter_CreateShortURL(t *testing.T) {
 	})
 
 	t.Run("invalid url", func(t *testing.T) {
-		requestBody := strings.NewReader("some_invalid_url")
-		request := httptest.NewRequest(http.MethodPost, "/", requestBody)
-		request.Header.Add("Content-Type", "text/plain")
+		reqData, _ := json.Marshal(httpmodels.CreateURLRequest{URL: "some_invalid_url"})
+		request := httptest.NewRequest(http.MethodPost, targetRoute, bytes.NewReader(reqData))
+		request.Header.Add("Content-Type", "application/json")
 
 		w := httptest.NewRecorder()
 		ginEngine.ServeHTTP(w, request)
 
 		result := w.Result()
 		defer result.Body.Close()
-		var errResponse models.ErrorResponse
+		var errResponse httpmodels.ErrorResponse
 		errResult, _ := io.ReadAll(result.Body)
 		json.Unmarshal(errResult, &errResponse)
 
+		validateErrorMessage := fmt.Sprintf("%s field doesn't match pattern %s", "URL", constants.RegexpURL)
+
 		assert.Equal(t, 400, result.StatusCode)
-		assert.Equal(t, constants.MessageErrorIncorrectURL, errResponse.Error)
+		assert.Equal(t, validateErrorMessage, errResponse.Error)
 	})
 
 	t.Run("success convert url to short url", func(t *testing.T) {
-		requestBody := strings.NewReader("https://practicum.yandex.ru/")
-		request := httptest.NewRequest(http.MethodPost, "/", requestBody)
-		request.Header.Add("Content-Type", "text/plain")
+		reqData, _ := json.Marshal(httpmodels.CreateURLRequest{URL: "https://practicum.yandex.ru/"})
+		request := httptest.NewRequest(http.MethodPost, targetRoute, bytes.NewReader(reqData))
+		request.Header.Add("Content-Type", "application/x-gzip")
 
 		w := httptest.NewRecorder()
 		ginEngine.ServeHTTP(w, request)

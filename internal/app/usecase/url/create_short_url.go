@@ -1,7 +1,11 @@
 package url
 
-func (u *urlUseCase) CreateShortURL(url string) string {
-	urlEntity := u.provider.CreateURL(url)
+func (u *urlUseCase) CreateShortURL(url string) (string, error) {
+	urlEntity, err := u.provider.CreateURL(url)
 
-	return u.serverURL + "/" + urlEntity.ID
+	if err != nil {
+		return "", err
+	}
+
+	return u.serverURL + "/" + urlEntity.ID, nil
 }

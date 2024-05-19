@@ -13,6 +13,6 @@ func NewStorageProvider(storageInstance *storage.Instance) IStorageProvider {
 }
 
 type IStorageProvider interface {
-	CreateURL(url string) *storage.URLEntity
+	CreateURL(url string) (*storage.URLEntity, error)
 	GetURL(url string) *storage.URLEntity
 }

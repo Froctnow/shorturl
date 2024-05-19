@@ -3,18 +3,23 @@ package config
 import (
 	"flag"
 	"fmt"
+
 	"github.com/caarlos0/env/v6"
 )
 
 type Values struct {
-	Address  string `env:"SERVER_ADDRESS" envSeparator:":"`
-	Hostname string `env:"BASE_URL" envSeparator:":"`
+	Address         string `env:"SERVER_ADDRESS" envSeparator:":"`
+	Hostname        string `env:"BASE_URL" envSeparator:":"`
+	LogLevel        string `env:"LOG_LEVEL" envSeparator:":"`
+	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
 }
 
 func NewConfig() (*Values, error) {
 	var cfg Values
 	address := flag.String("a", "", "address of service")
 	hostname := flag.String("b", "", "hostname of service")
+	logLevel := flag.String("loglevel", "", "level of logs")
+	fileStoragePath := flag.String("f", "", "file path to the storage file")
 
 	err := env.Parse(&cfg)
 
@@ -38,6 +43,22 @@ func NewConfig() (*Values, error) {
 		}
 
 		cfg.Hostname = *hostname
+	}
+
+	if cfg.LogLevel == "" {
+		if *logLevel == "" {
+			*logLevel = "info"
+		}
+
+		cfg.LogLevel = *logLevel
+	}
+
+	if cfg.FileStoragePath == "" {
+		if *fileStoragePath == "" {
+			*fileStoragePath = ""
+		}
+
+		cfg.FileStoragePath = *fileStoragePath
 	}
 
 	return &cfg, nil

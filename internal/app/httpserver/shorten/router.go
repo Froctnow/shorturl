@@ -1,31 +1,33 @@
-package url
+package shorten
 
 import (
 	"shorturl/internal/app/usecase/url"
+	"shorturl/internal/app/validator"
 
 	"github.com/gin-gonic/gin"
 )
 
 type Router interface {
 	CreateShortURL(c *gin.Context)
-	GetShortURL(c *gin.Context)
 }
 
-type urlRouter struct {
+type shortenRouter struct {
 	urlUseCase url.UseCase
+	validator  validator.Validator
 }
 
 func NewRouter(
 	ginGroup *gin.RouterGroup,
 	urlUseCase url.UseCase,
+	validator validator.Validator,
 ) Router {
-	router := &urlRouter{
+	router := &shortenRouter{
 		urlUseCase: urlUseCase,
+		validator:  validator,
 	}
 
-	urlGroup := ginGroup.Group("/")
-	urlGroup.POST("/", router.CreateShortURL)
-	urlGroup.GET("/:alias", router.GetShortURL)
+	urlGroup := ginGroup.Group("/api")
+	urlGroup.POST("/shorten", router.CreateShortURL)
 
 	return router
 }
