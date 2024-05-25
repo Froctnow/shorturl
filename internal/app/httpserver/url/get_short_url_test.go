@@ -1,13 +1,17 @@
 package url
 
 import (
+	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	"shorturl/internal/app/httpserver/models"
-	"shorturl/internal/app/provider"
+	"shorturl/internal/app/log"
+	"shorturl/internal/app/repository"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"testing"
@@ -20,9 +24,13 @@ import (
 func TestUrlRouter_GetShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
-	storageMock := storage.NewStorage("", nil)
-	shortenerProvider := provider.NewStorageProvider(storageMock)
-	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
+	cfg, err := config.NewConfig(false)
+	if err != nil {
+		panic(fmt.Errorf("config read err %w", err))
+	}
+	logger, _ := log.New(*cfg)
+	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL)
 	ginEngine.Use(gin.Recovery())
 
 	apiGroup := ginEngine.Group("/")
@@ -62,9 +70,10 @@ func TestUrlRouter_GetShortURL(t *testing.T) {
 	})
 
 	t.Run("success get short url", func(t *testing.T) {
+		ctx := context.Background()
 		redirectURL := "https://practicum.yandex.ru/"
-		urlEntityDto := &storage.URLEntityDto{URL: redirectURL}
-		urlEntity, _ := storageMock.URLRepository.CreateEntity(urlEntityDto)
+		urlEntityDto := &repository.URLEntityDto{URL: redirectURL}
+		urlEntity, _ := storageInstance.URLRepository.CreateEntity(ctx, urlEntityDto)
 		target := "/" + urlEntity.ID
 
 		request := httptest.NewRequest(http.MethodGet, target, nil)

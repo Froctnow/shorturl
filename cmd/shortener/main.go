@@ -12,7 +12,7 @@ func main() {
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
 
-	cfg, err := config.NewConfig()
+	cfg, err := config.NewConfig(true)
 
 	if err != nil {
 		panic(fmt.Errorf("config read err %w", err))

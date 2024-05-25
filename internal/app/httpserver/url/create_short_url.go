@@ -1,11 +1,13 @@
 package url
 
 import (
+	"errors"
 	"io"
 	"net/http"
 	"regexp"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
+	"shorturl/internal/app/repository"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -41,7 +43,12 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(url)
+	shortURL, err := r.urlUseCase.CreateShortURL(ctx, url)
+
+	if err != nil && errors.As(err, &repository.URLDuplicateError{}) {
+		ctx.String(http.StatusConflict, err.(repository.URLDuplicateError).URL)
+		return
+	}
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})

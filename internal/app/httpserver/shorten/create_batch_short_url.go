@@ -4,13 +4,11 @@ import (
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
-	"shorturl/internal/app/repository"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 )
 
-func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
+func (r *shortenRouter) CreateBatchShortURL(ctx *gin.Context) {
 	headerContentType := ctx.GetHeader("Content-Type")
 	isCorrectHeaderContentType := r.checkHeaderContentType(headerContentType)
 
@@ -19,33 +17,33 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	var req httpmodels.CreateURLRequest
+	var req []httpmodels.CreateBatchURLRequest
 	if err := ctx.ShouldBindJSON(&req); err != nil {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	errs := r.validator.ShortenCreateShortURL(&req, constants.RegexpURL)
+	errs := r.validator.ShortenCreateBatchShortURL(&req)
 	if len(errs.Errors) != 0 {
 		ctx.AbortWithStatusJSON(http.StatusBadRequest, httpmodels.ErrorResponse{Error: errs.Error()})
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(ctx, req.URL)
-
-	if err != nil && errors.As(err, &repository.URLDuplicateError{}) {
-		ctx.AbortWithStatusJSON(http.StatusConflict, httpmodels.CreateURLResponse{
-			Result: err.(repository.URLDuplicateError).URL,
-		})
-		return
-	}
+	batchURL, err := r.urlUseCase.CreateBatchShortURL(ctx, &req)
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})
 		return
 	}
 
-	ctx.JSON(http.StatusCreated, httpmodels.CreateURLResponse{
-		Result: shortURL,
-	})
+	result := make([]httpmodels.CreateBatchURLResponse, 0)
+
+	for _, url := range *batchURL {
+		result = append(result, httpmodels.CreateBatchURLResponse{
+			CorrelationID: url.CorrelationID,
+			ShortURL:      url.ShortURL,
+		})
+	}
+
+	ctx.JSON(http.StatusCreated, &result)
 }

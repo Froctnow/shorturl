@@ -3,6 +3,7 @@ package shorten
 import (
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -28,6 +29,14 @@ func NewRouter(
 
 	urlGroup := ginGroup.Group("/api")
 	urlGroup.POST("/shorten", router.CreateShortURL)
+	urlGroup.POST("/shorten/batch", router.CreateBatchShortURL)
 
 	return router
+}
+
+func (r *shortenRouter) checkHeaderContentType(value string) bool {
+	isTextPlain := strings.Contains(value, "application/json")
+	isXGzip := strings.Contains(value, "application/x-gzip")
+
+	return isTextPlain || isXGzip
 }

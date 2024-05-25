@@ -2,12 +2,14 @@ package url
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	"shorturl/internal/app/httpserver/models"
-	"shorturl/internal/app/provider"
+	"shorturl/internal/app/log"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"strings"
@@ -22,9 +24,13 @@ const ServerURL = "http://localhost:8080"
 func TestUrlRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()
 
-	storageMock := storage.NewStorage("", nil)
-	shortenerProvider := provider.NewStorageProvider(storageMock)
-	urlUseCase := url.NewUseCase(shortenerProvider, ServerURL)
+	cfg, err := config.NewConfig(false)
+	if err != nil {
+		panic(fmt.Errorf("config read err %w", err))
+	}
+	logger, _ := log.New(*cfg)
+	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL)
 	ginEngine.Use(gin.Recovery())
 
 	apiGroup := ginEngine.Group("/")
