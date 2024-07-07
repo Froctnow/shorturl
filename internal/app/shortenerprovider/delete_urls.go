@@ -13,13 +13,19 @@ func (p *ShortenerDBProvider) DeleteURLs(
 	urls *[]string,
 	userID string,
 ) error {
-	_, err := p.conn.NamedQueryxContext(
+	rows, err := p.conn.NamedQueryxContext(
 		ctx,
 		"DeleteURLs",
 		p.mapper.URLIDs(urls),
 		tx,
 		userID,
 	)
+	if err != nil {
+		return fmt.Errorf("can't execute DeleteURLs: %w", err)
+	}
+
+	err = rows.Err()
+
 	if err != nil {
 		return fmt.Errorf("can't execute DeleteURLs: %w", err)
 	}

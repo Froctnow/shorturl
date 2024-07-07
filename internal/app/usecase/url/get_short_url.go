@@ -13,7 +13,7 @@ func (u *urlUseCase) GetShortURL(ctx context.Context, alias string) (string, err
 		return "", usecaseerrors.URLNotFound{}
 	}
 
-	if urlEntity.IsDeleted == true {
+	if urlEntity.IsDeleted {
 		return "", usecaseerrors.URLIsDeletedError{}
 	}
 

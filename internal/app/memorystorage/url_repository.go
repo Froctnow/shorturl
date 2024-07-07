@@ -88,12 +88,12 @@ func (ur *URLRepository) DeleteShortURLs(_ context.Context, request *[]string, u
 		entity := ur.table[shortURL]
 
 		if entity == nil {
-			fmt.Println(fmt.Sprintf("can't find entity with short URL %s", shortURL))
+			fmt.Printf("can't find entity with short URL %s \n", shortURL)
 			continue
 		}
 
 		if entity.UserID != userID {
-			fmt.Println(fmt.Sprintf("entity with short URL %s doesn't belong to user %s", shortURL, userID))
+			fmt.Printf("entity with short URL %s doesn't belong to user %s \n", shortURL, userID)
 			continue
 		}
 
