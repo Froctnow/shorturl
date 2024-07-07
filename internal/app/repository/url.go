@@ -10,12 +10,14 @@ type URL interface {
 	GetEntity(ctx context.Context, alias string) *URLEntity
 	CreateBatch(ctx context.Context, dto *[]BatchURLDto, userId string) (*[]BatchURL, error)
 	GetUserURLs(ctx context.Context, userID string) (*[]UserURL, error)
+	DeleteShortURLs(ctx context.Context, urls *[]string, userID string) error
 }
 
 type URLEntity struct {
-	ID     string
-	URL    string
-	UserID string
+	ID        string
+	URL       string
+	UserID    string
+	IsDeleted bool
 }
 
 type URLEntityDto struct {

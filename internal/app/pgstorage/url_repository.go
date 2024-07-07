@@ -3,6 +3,7 @@ package pgstorage
 import (
 	"context"
 	"fmt"
+
 	"shorturl/internal/app/repository"
 	"shorturl/internal/app/shortenerprovider"
 )
@@ -97,4 +98,14 @@ func (ur *URLRepository) GetUserURLs(ctx context.Context, userID string) (*[]rep
 	}
 
 	return &entities, nil
+}
+
+func (ur *URLRepository) DeleteShortURLs(ctx context.Context, urls *[]string, userID string) error {
+	err := ur.provider.DeleteURLs(ctx, nil, urls, userID)
+
+	if err != nil {
+		return fmt.Errorf("can't delete URLs: %w", err)
+	}
+
+	return nil
 }

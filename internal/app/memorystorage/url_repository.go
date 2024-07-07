@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"os"
+
 	"shorturl/internal/app/memorystorage/models"
 	"shorturl/internal/app/repository"
 
@@ -80,6 +81,26 @@ func (ur *URLRepository) GetUserURLs(_ context.Context, userID string) (*[]repos
 	}
 
 	return &result, nil
+}
+
+func (ur *URLRepository) DeleteShortURLs(_ context.Context, request *[]string, userID string) error {
+	for _, shortURL := range *request {
+		entity := ur.table[shortURL]
+
+		if entity == nil {
+			fmt.Println(fmt.Sprintf("can't find entity with short URL %s", shortURL))
+			continue
+		}
+
+		if entity.UserID != userID {
+			fmt.Println(fmt.Sprintf("entity with short URL %s doesn't belong to user %s", shortURL, userID))
+			continue
+		}
+
+		entity.IsDeleted = true
+	}
+
+	return nil
 }
 
 func (ur *URLRepository) writeToFile(urlEntity *repository.URLEntity) error {

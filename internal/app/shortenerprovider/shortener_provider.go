@@ -3,18 +3,22 @@ package shortenerprovider
 import (
 	"fmt"
 	"reflect"
+
+	"shorturl/internal/app/shortenerprovider/mapper"
 	"shorturl/pkg/logger"
 
 	"shorturl/pkg/pgclient"
 )
 
 type ShortenerDBProvider struct {
-	conn pgclient.PGClient
+	conn   pgclient.PGClient
+	mapper mapper.Mapper
 }
 
 func NewShortenerProvider(dbConn pgclient.PGClient) ShortenerProvider {
 	return &ShortenerDBProvider{
-		conn: dbConn,
+		mapper: mapper.New(),
+		conn:   dbConn,
 	}
 }
 
