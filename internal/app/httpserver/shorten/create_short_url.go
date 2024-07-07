@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
-	"strings"
+	"shorturl/internal/app/repository"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 )
 
 func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
@@ -30,7 +31,14 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 		return
 	}
 
-	shortURL, err := r.urlUseCase.CreateShortURL(req.URL)
+	shortURL, err := r.urlUseCase.CreateShortURL(ctx, req.URL, ctx.GetString("user_id"))
+
+	if err != nil && errors.As(err, &repository.URLDuplicateError{}) {
+		ctx.AbortWithStatusJSON(http.StatusConflict, httpmodels.CreateURLResponse{
+			Result: err.(repository.URLDuplicateError).URL,
+		})
+		return
+	}
 
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})
@@ -40,11 +48,4 @@ func (r *shortenRouter) CreateShortURL(ctx *gin.Context) {
 	ctx.JSON(http.StatusCreated, httpmodels.CreateURLResponse{
 		Result: shortURL,
 	})
-}
-
-func (r *shortenRouter) checkHeaderContentType(value string) bool {
-	isTextPlain := strings.Contains(value, "application/json")
-	isXGzip := strings.Contains(value, "application/x-gzip")
-
-	return isTextPlain || isXGzip
 }

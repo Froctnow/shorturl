@@ -1,9 +1,13 @@
 package url
 
-import "errors"
+import (
+	"errors"
 
-func (u *urlUseCase) GetShortURL(alias string) (string, error) {
-	urlEntity := u.provider.GetURL(alias)
+	"golang.org/x/net/context"
+)
+
+func (u *urlUseCase) GetShortURL(ctx context.Context, alias string) (string, error) {
+	urlEntity := u.urlRepository.GetEntity(ctx, alias)
 
 	if urlEntity == nil {
 		return "", errors.New("alias not found")

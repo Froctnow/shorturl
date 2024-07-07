@@ -1,25 +1,34 @@
 package url
 
 import (
-	"shorturl/internal/app/provider"
+	httpmodels "shorturl/internal/app/httpserver/models"
+	"shorturl/internal/app/repository"
+	"shorturl/pkg/logger"
+
+	"golang.org/x/net/context"
 )
 
 type urlUseCase struct {
-	provider  provider.IStorageProvider
-	serverURL string
+	urlRepository repository.URL
+	serverURL     string
+	logger        logger.LogClient
 }
 
 func NewUseCase(
-	provider provider.IStorageProvider,
+	urlRepository repository.URL,
 	serverURL string,
+	logger logger.LogClient,
 ) UseCase {
 	return &urlUseCase{
-		provider:  provider,
-		serverURL: serverURL,
+		urlRepository: urlRepository,
+		serverURL:     serverURL,
+		logger:        logger,
 	}
 }
 
 type UseCase interface {
-	CreateShortURL(url string) (string, error)
-	GetShortURL(alias string) (string, error)
+	CreateShortURL(ctx context.Context, url string, userID string) (string, error)
+	GetShortURL(ctx context.Context, alias string) (string, error)
+	CreateBatchShortURL(ctx context.Context, request *[]httpmodels.CreateBatchURLRequest, userID string) (*[]repository.BatchURL, error)
+	GetUserURLs(ctx context.Context, userID string) (*[]repository.UserURL, error)
 }

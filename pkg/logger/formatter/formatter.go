@@ -4,6 +4,8 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"reflect"
+	"shorturl/pkg/logger/options"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -26,9 +28,14 @@ type JSONFormatter struct {
 
 // LogDataFields uses for set order for fields in logs
 type LogDataFields struct {
-	Time  string         `json:"time"`
-	Level string         `json:"level"`
-	Msg   LogDataMessage `json:"msg"`
+	Time   string         `json:"time"`
+	Level  string         `json:"level"`
+	Msg    LogDataMessage `json:"msg"`
+	Labels *LogDataLabels `json:"labels,omitempty"`
+}
+
+type LogDataLabels struct {
+	UserID string `json:"user_id,omitempty"`
 }
 
 type LogDataMessage struct {
@@ -43,6 +50,29 @@ type LogDataMessage struct {
 func (f *JSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 	data := LogDataFields{}
 
+	for k, v := range entry.Data {
+		switch v := v.(type) {
+		case error:
+			data.Msg.Error = v.Error()
+		default:
+			if k == LogOptionsField {
+				opts, ok := v.(options.LoggerOptions)
+				if ok {
+					showLabels := opts.UserID != ""
+					showExtras := !(opts.Extras == nil ||
+						reflect.ValueOf(opts.Extras).IsNil())
+					if showLabels {
+						data.Labels = &LogDataLabels{}
+						data.Labels.UserID = opts.UserID
+					}
+					if showExtras {
+						data.Msg.Extras = opts.Extras
+					}
+				}
+			}
+		}
+	}
+
 	timestampFormat := f.TimestampFormat
 	if timestampFormat == "" {
 		timestampFormat = time.RFC3339
@@ -52,6 +82,7 @@ func (f *JSONFormatter) Format(entry *logrus.Entry) ([]byte, error) {
 		data.Time = entry.Time.Format(timestampFormat)
 	}
 	data.Msg.Message = entry.Message
+	data.Level = entry.Level.String()
 
 	var b *bytes.Buffer
 	if entry.Buffer != nil {

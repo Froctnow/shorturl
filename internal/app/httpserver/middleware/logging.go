@@ -2,9 +2,11 @@ package middleware
 
 import (
 	"bytes"
+	"context"
 	"fmt"
 	"io"
 	"shorturl/pkg/logger"
+	"shorturl/pkg/logger/options"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -24,8 +26,14 @@ func LoggingMiddleware(logger logger.LogClient) gin.HandlerFunc {
 		// Восстановление тела запроса
 		c.Request.Body = io.NopCloser(bytes.NewBuffer(bodyBytes))
 
+		ctx := context.Background()
+		ctx = logger.SetOptionsToCtx(
+			ctx,
+			options.WithUserID(c.GetString("user_id")),
+		)
+
 		methodName := c.Request.Method + " " + c.Request.URL.Path
-		logger.Info("HTTP request on method: " + methodName + ", Body: " + string(bodyBytes))
+		logger.InfoCtx(ctx, "HTTP request on method: "+methodName+", Body: "+string(bodyBytes))
 
 		// Обработка запроса
 		c.Next()
@@ -43,9 +51,9 @@ func LoggingMiddleware(logger logger.LogClient) gin.HandlerFunc {
 		)
 
 		if c.Errors.Last() != nil {
-			logger.Error(c.Errors.Last())
+			logger.ErrorCtx(ctx, c.Errors.Last())
 		} else {
-			logger.Info(requestInfoText)
+			logger.InfoCtx(ctx, requestInfoText)
 		}
 
 		if err != nil {

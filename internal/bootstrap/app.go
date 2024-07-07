@@ -7,8 +7,8 @@ import (
 	"os/signal"
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver"
-	"shorturl/internal/app/provider"
 	"shorturl/internal/app/storage"
+	"shorturl/internal/app/usecase/metrics"
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
 	"shorturl/pkg/logger"
@@ -22,9 +22,9 @@ func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 		panic(fmt.Errorf("http server can't start %w", err))
 	}
 
-	storageInstance := storage.NewStorage(cfg.FileStoragePath, logger)
-	storageProvider := provider.NewStorageProvider(storageInstance)
-	urlUseCase := url.NewUseCase(storageProvider, cfg.Hostname)
+	storageInstance, shortenerProvider := storage.NewStorage(cfg.StorageMode, cfg, logger)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, cfg.Hostname, logger)
+	metricsUseCase := metrics.NewUseCase(shortenerProvider)
 	validatorInstance := validator.New()
 
 	_ = httpserver.NewShortenerServer(
@@ -32,6 +32,8 @@ func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {
 		urlUseCase,
 		logger,
 		validatorInstance,
+		metricsUseCase,
+		cfg,
 	)
 
 	exit := make(chan os.Signal, 1)

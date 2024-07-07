@@ -3,6 +3,7 @@ package config
 import (
 	"flag"
 	"fmt"
+	"time"
 
 	"github.com/caarlos0/env/v6"
 )
@@ -12,14 +13,19 @@ type Values struct {
 	Hostname        string `env:"BASE_URL" envSeparator:":"`
 	LogLevel        string `env:"LOG_LEVEL" envSeparator:":"`
 	FileStoragePath string `env:"FILE_STORAGE_PATH" envSeparator:":"`
+	DatabaseDSN     string `env:"DATABASE_DSN" envSeparator:":"`
+	StorageMode     string
+	JwtSecret       string
+	JwtTokenExpire  time.Duration
 }
 
-func NewConfig() (*Values, error) {
+func NewConfig(isUseFlags bool) (*Values, error) {
 	var cfg Values
-	address := flag.String("a", "", "address of service")
-	hostname := flag.String("b", "", "hostname of service")
-	logLevel := flag.String("loglevel", "", "level of logs")
-	fileStoragePath := flag.String("f", "", "file path to the storage file")
+	var address = new(string)
+	var hostname = new(string)
+	var logLevel = new(string)
+	var fileStoragePath = new(string)
+	var databaseDSN = new(string)
 
 	err := env.Parse(&cfg)
 
@@ -27,8 +33,15 @@ func NewConfig() (*Values, error) {
 		panic(fmt.Errorf("can't parse env %w", err))
 	}
 
-	// разбор командной строки
-	flag.Parse()
+	if isUseFlags {
+		address = flag.String("a", "", "address of service")
+		hostname = flag.String("b", "", "hostname of service")
+		logLevel = flag.String("loglevel", "", "level of logs")
+		fileStoragePath = flag.String("f", "", "file path to the storage file")
+		databaseDSN = flag.String("d", "", "database DSN")
+		// разбор командной строки
+		flag.Parse()
+	}
 
 	if cfg.Address == "" {
 		if *address == "" {
@@ -60,6 +73,25 @@ func NewConfig() (*Values, error) {
 
 		cfg.FileStoragePath = *fileStoragePath
 	}
+
+	if cfg.DatabaseDSN == "" {
+		if *databaseDSN == "" {
+			*databaseDSN = ""
+		}
+
+		cfg.DatabaseDSN = *databaseDSN
+	}
+
+	if cfg.DatabaseDSN != "" {
+		cfg.StorageMode = StorageModeDatabase
+	} else {
+		cfg.StorageMode = StorageModeMemory
+	}
+
+	cfg.JwtSecret = "supersecretkey"
+	cfg.JwtTokenExpire = time.Hour * 3
+
+	fmt.Println(cfg.LogLevel)
 
 	return &cfg, nil
 }
