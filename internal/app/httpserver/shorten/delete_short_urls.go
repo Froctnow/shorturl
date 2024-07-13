@@ -31,7 +31,7 @@ func (r *shortenRouter) DeleteShortURLs(ctx *gin.Context) {
 	}
 
 	go func() {
-		r.urlUseCase.DeleteShortURLs(ctx, &req, ctx.GetString("user_id"))
+		r.urlUseCase.DeleteShortURLs(ctx, req, ctx.GetString("user_id"))
 	}()
 
 	ctx.Writer.WriteHeader(http.StatusAccepted)

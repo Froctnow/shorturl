@@ -31,5 +31,5 @@ type UseCase interface {
 	GetShortURL(ctx context.Context, alias string) (string, error)
 	CreateBatchShortURL(ctx context.Context, request *[]httpmodels.CreateBatchURLRequest, userID string) (*[]repository.BatchURL, error)
 	GetUserURLs(ctx context.Context, userID string) (*[]repository.UserURL, error)
-	DeleteShortURLs(ctx context.Context, request *[]string, userID string) error
+	DeleteShortURLs(ctx context.Context, request []string, userID string) error
 }

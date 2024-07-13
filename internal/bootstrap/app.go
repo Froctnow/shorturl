@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"os"
 	"os/signal"
+	"syscall"
+
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver"
 	"shorturl/internal/app/storage"
@@ -12,7 +14,6 @@ import (
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
 	"shorturl/pkg/logger"
-	"syscall"
 )
 
 func RunApp(ctx context.Context, cfg *config.Values, logger logger.LogClient) {

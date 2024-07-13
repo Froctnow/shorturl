@@ -3,6 +3,7 @@ package shortenerprovider
 import (
 	"context"
 	"fmt"
+
 	"shorturl/internal/app/shortenerprovider/models"
 	"shorturl/pkg/pgclient"
 )
@@ -26,7 +27,6 @@ func (p *ShortenerDBProvider) CreateURL(
 	}
 
 	err = rows.Err()
-
 	if err != nil {
 		return models.URL{}, fmt.Errorf("can't execute CreateURL: %w", err)
 	}

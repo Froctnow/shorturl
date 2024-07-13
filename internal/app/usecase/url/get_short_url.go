@@ -10,7 +10,7 @@ func (u *urlUseCase) GetShortURL(ctx context.Context, alias string) (string, err
 	urlEntity := u.urlRepository.GetEntity(ctx, alias)
 
 	if urlEntity == nil {
-		return "", usecaseerrors.URLNotFound{}
+		return "", usecaseerrors.URLNotFoundError{}
 	}
 
 	if urlEntity.IsDeleted {

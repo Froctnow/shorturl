@@ -37,7 +37,7 @@ type ShortenerProvider interface {
 	DeleteURLs(
 		ctx context.Context,
 		tx pgclient.Transaction,
-		urls *[]string,
+		urls []string,
 		userID string,
 	) error
 

@@ -21,14 +21,13 @@ type Values struct {
 
 func NewConfig(isUseFlags bool) (*Values, error) {
 	var cfg Values
-	var address = new(string)
-	var hostname = new(string)
-	var logLevel = new(string)
-	var fileStoragePath = new(string)
-	var databaseDSN = new(string)
+	address := new(string)
+	hostname := new(string)
+	logLevel := new(string)
+	fileStoragePath := new(string)
+	databaseDSN := new(string)
 
 	err := env.Parse(&cfg)
-
 	if err != nil {
 		panic(fmt.Errorf("can't parse env %w", err))
 	}

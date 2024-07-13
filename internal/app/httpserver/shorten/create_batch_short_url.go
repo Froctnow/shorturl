@@ -2,6 +2,7 @@ package shorten
 
 import (
 	"net/http"
+
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 
@@ -30,7 +31,6 @@ func (r *shortenRouter) CreateBatchShortURL(ctx *gin.Context) {
 	}
 
 	batchURL, err := r.urlUseCase.CreateBatchShortURL(ctx, &req, ctx.GetString("user_id"))
-
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})
 		return

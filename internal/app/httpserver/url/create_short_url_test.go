@@ -6,14 +6,15 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"strings"
+	"testing"
+
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	"shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/log"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
-	"strings"
-	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"

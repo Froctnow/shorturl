@@ -5,10 +5,11 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strings"
+
 	"shorturl/internal/app/memorystorage/models"
 	"shorturl/internal/app/repository"
 	"shorturl/pkg/logger"
-	"strings"
 
 	"github.com/pkg/errors"
 )
@@ -37,8 +38,7 @@ func initFromFile(storageFilePath string, storage *Instance, logger logger.LogCl
 		_, err := os.Stat("tmp")
 
 		if err != nil && errors.Is(err, os.ErrNotExist) {
-			err := os.Mkdir("tmp", 0700)
-
+			err := os.Mkdir("tmp", 0o700)
 			if err != nil {
 				logger.Error(fmt.Errorf("can't create dir for storage, err %w", err))
 				return
@@ -46,7 +46,6 @@ func initFromFile(storageFilePath string, storage *Instance, logger logger.LogCl
 		}
 
 		file, err := os.Create(storageFilePath)
-
 		if err != nil {
 			logger.Error(fmt.Errorf("can't create file for storage, err %w", err))
 			return
@@ -65,7 +64,6 @@ func initFromFile(storageFilePath string, storage *Instance, logger logger.LogCl
 	}
 
 	file, err := os.Open(storageFilePath)
-
 	if err != nil {
 		logger.Error(fmt.Errorf("can't open file for storage, err %w", err))
 		return
@@ -74,7 +72,6 @@ func initFromFile(storageFilePath string, storage *Instance, logger logger.LogCl
 	defer file.Close()
 
 	fileData, err := io.ReadAll(file)
-
 	if err != nil {
 		logger.Error(fmt.Errorf("can't read data from file, err %w", err))
 		return
@@ -94,7 +91,6 @@ func initFromFile(storageFilePath string, storage *Instance, logger logger.LogCl
 
 		var URLFromFile models.URLFromFile
 		err := json.Unmarshal([]byte(data), &URLFromFile)
-
 		if err != nil {
 			logger.Error(fmt.Errorf("can't unmarshal JSON from file, err %w", err))
 			continue

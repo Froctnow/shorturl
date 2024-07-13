@@ -10,7 +10,7 @@ import (
 func (p *ShortenerDBProvider) DeleteURLs(
 	ctx context.Context,
 	tx pgclient.Transaction,
-	urls *[]string,
+	urls []string,
 	userID string,
 ) error {
 	rows, err := p.conn.NamedQueryxContext(
@@ -25,7 +25,6 @@ func (p *ShortenerDBProvider) DeleteURLs(
 	}
 
 	err = rows.Err()
-
 	if err != nil {
 		return fmt.Errorf("can't execute DeleteURLs: %w", err)
 	}

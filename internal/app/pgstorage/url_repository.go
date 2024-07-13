@@ -20,14 +20,12 @@ func NewURLRepository(provider shortenerprovider.ShortenerProvider) *URLReposito
 
 func (ur *URLRepository) CreateEntity(ctx context.Context, urlEntityDto *repository.URLEntityDto) (*repository.URLEntity, error) {
 	entity, err := ur.provider.CreateURL(ctx, nil, urlEntityDto.URL, urlEntityDto.UserID)
-
 	if err != nil {
 		return nil, fmt.Errorf("can't create entity: %w", err)
 	}
 
 	if entity.ID == "" {
 		r, err := ur.provider.GetURLID(ctx, nil, urlEntityDto.URL)
-
 		if err != nil {
 			return nil, fmt.Errorf("can't get entity ID: %w", err)
 		}
@@ -42,7 +40,6 @@ func (ur *URLRepository) CreateEntity(ctx context.Context, urlEntityDto *reposit
 
 func (ur *URLRepository) GetEntity(ctx context.Context, alias string) *repository.URLEntity {
 	entity, err := ur.provider.GetURL(ctx, nil, alias)
-
 	if err != nil {
 		return nil
 	}
@@ -55,17 +52,14 @@ func (ur *URLRepository) GetEntity(ctx context.Context, alias string) *repositor
 func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository.BatchURLDto, userID string) (*[]repository.BatchURL, error) {
 	entities := make([]repository.BatchURL, 0)
 	tx, err := ur.provider.BeginTransaction()
-
 	if err != nil {
 		return nil, fmt.Errorf("can't begin transaction: %w", err)
 	}
 
 	for _, e := range *batchDto {
 		entity, err := ur.provider.CreateURL(ctx, tx, e.OriginalURL, userID)
-
 		if err != nil {
 			err = tx.Rollback()
-
 			if err != nil {
 				return nil, fmt.Errorf("can't rollback transaction: %w", err)
 			}
@@ -77,7 +71,6 @@ func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository
 	}
 
 	err = tx.Commit()
-
 	if err != nil {
 		return nil, fmt.Errorf("can't commit transaction: %w", err)
 	}
@@ -88,7 +81,6 @@ func (ur *URLRepository) CreateBatch(ctx context.Context, batchDto *[]repository
 func (ur *URLRepository) GetUserURLs(ctx context.Context, userID string) (*[]repository.UserURL, error) {
 	entities := make([]repository.UserURL, 0)
 	urls, err := ur.provider.GetUserURLs(ctx, nil, userID)
-
 	if err != nil {
 		return nil, fmt.Errorf("can't get user URLs: %w", err)
 	}
@@ -100,9 +92,8 @@ func (ur *URLRepository) GetUserURLs(ctx context.Context, userID string) (*[]rep
 	return &entities, nil
 }
 
-func (ur *URLRepository) DeleteShortURLs(ctx context.Context, urls *[]string, userID string) error {
+func (ur *URLRepository) DeleteShortURLs(ctx context.Context, urls []string, userID string) error {
 	err := ur.provider.DeleteURLs(ctx, nil, urls, userID)
-
 	if err != nil {
 		return fmt.Errorf("can't delete URLs: %w", err)
 	}

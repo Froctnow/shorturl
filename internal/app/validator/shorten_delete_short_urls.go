@@ -5,7 +5,7 @@ import (
 )
 
 func (v *validator) ShortenDeleteShortURLs(data *[]string) *validate.Errors {
-	var checks []validate.Validator
+	checks := make([]validate.Validator, 0, len(*data))
 
 	for _, url := range *data {
 		checks = append(checks, &StringLenGreaterThenValidator{

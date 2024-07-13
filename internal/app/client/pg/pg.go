@@ -3,6 +3,7 @@ package pg
 import (
 	"embed"
 	"fmt"
+
 	"shorturl/internal/app/config"
 	"shorturl/pkg/logger"
 	"shorturl/pkg/pgclient"

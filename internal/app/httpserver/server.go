@@ -14,8 +14,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ShortenerServer interface {
-}
+type ShortenerServer interface{}
 
 type shortenerServer struct {
 	urlRouter       urlhttp.Router

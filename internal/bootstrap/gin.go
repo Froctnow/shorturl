@@ -3,8 +3,9 @@ package bootstrap
 import (
 	"fmt"
 	"net/http"
-	"shorturl/internal/app/config"
 	"time"
+
+	"shorturl/internal/app/config"
 
 	"github.com/gin-gonic/gin"
 )
@@ -32,5 +33,4 @@ func RunHTTPServer(
 	}()
 
 	return server, nil
-
 }

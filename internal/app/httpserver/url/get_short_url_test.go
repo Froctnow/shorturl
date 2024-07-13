@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	"shorturl/internal/app/httpserver/models"
@@ -14,7 +16,6 @@ import (
 	"shorturl/internal/app/repository"
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
-	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/google/uuid"

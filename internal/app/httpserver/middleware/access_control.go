@@ -3,10 +3,11 @@ package middleware
 import (
 	"fmt"
 	"net/http"
+	"time"
+
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	"shorturl/pkg/logger"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
@@ -31,7 +32,6 @@ func AccessControlMiddleware(cfg *config.Values, logger logger.LogClient) gin.Ha
 
 		if jwtToken == "" || errors.Is(err, http.ErrNoCookie) {
 			token, userID, err := buildJWTString(cfg.JwtSecret, cfg.JwtTokenExpire)
-
 			if err != nil {
 				logger.ErrorCtx(c, fmt.Errorf("can't build jwt token: %w", err))
 				c.AbortWithStatus(http.StatusInternalServerError)
@@ -47,7 +47,6 @@ func AccessControlMiddleware(cfg *config.Values, logger logger.LogClient) gin.Ha
 		}
 
 		decodedJwtToken, err := decodeJwtToken(jwtToken, cfg.JwtSecret)
-
 		if err != nil {
 			logger.ErrorCtx(c, fmt.Errorf("can't decode jwt token: %w", err))
 			c.AbortWithStatus(http.StatusInternalServerError)

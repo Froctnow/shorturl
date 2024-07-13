@@ -1,15 +1,13 @@
 package errors
 
-type URLIsDeletedError struct {
-}
+type URLIsDeletedError struct{}
 
 func (e URLIsDeletedError) Error() string {
 	return "URL is deleted"
 }
 
-type URLNotFound struct {
-}
+type URLNotFoundError struct{}
 
-func (e URLNotFound) Error() string {
+func (e URLNotFoundError) Error() string {
 	return "URL not found"
 }

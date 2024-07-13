@@ -29,7 +29,6 @@ func (ur *URLRepository) CreateEntity(_ context.Context, urlEntityDto *repositor
 	entity := &repository.URLEntity{ID: ID, URL: urlEntityDto.URL, UserID: urlEntityDto.UserID}
 
 	err := ur.writeToFile(entity)
-
 	if err != nil {
 		return nil, fmt.Errorf("can't save entity, err %w", err)
 	}
@@ -58,7 +57,6 @@ func (ur *URLRepository) CreateBatch(_ context.Context, batchDto *[]repository.B
 		entity := &repository.URLEntity{ID: ID, URL: urlDto.OriginalURL, UserID: userID}
 
 		err := ur.writeToFile(entity)
-
 		if err != nil {
 			return nil, fmt.Errorf("can't save entity, err %w", err)
 		}
@@ -83,8 +81,8 @@ func (ur *URLRepository) GetUserURLs(_ context.Context, userID string) (*[]repos
 	return &result, nil
 }
 
-func (ur *URLRepository) DeleteShortURLs(_ context.Context, request *[]string, userID string) error {
-	for _, shortURL := range *request {
+func (ur *URLRepository) DeleteShortURLs(_ context.Context, request []string, userID string) error {
+	for _, shortURL := range request {
 		entity := ur.table[shortURL]
 
 		if entity == nil {
@@ -109,7 +107,6 @@ func (ur *URLRepository) writeToFile(urlEntity *repository.URLEntity) error {
 	}
 
 	file, err := os.OpenFile(ur.storageFilePath, os.O_APPEND|os.O_WRONLY, os.ModeAppend)
-
 	if err != nil {
 		return fmt.Errorf("can't open file of storage, err %w", err)
 	}
@@ -117,13 +114,11 @@ func (ur *URLRepository) writeToFile(urlEntity *repository.URLEntity) error {
 	defer file.Close()
 
 	URLFromFileJSON, err := json.Marshal(models.URLFromFile{UUID: urlEntity.ID, ShortURL: urlEntity.ID, OriginURL: urlEntity.URL, UserID: urlEntity.UserID})
-
 	if err != nil {
 		return fmt.Errorf("can't marshal URL, err %w", err)
 	}
 
 	_, err = file.WriteString(string(URLFromFileJSON) + "\n")
-
 	if err != nil {
 		return fmt.Errorf("can't write to file storage, err %w", err)
 	}

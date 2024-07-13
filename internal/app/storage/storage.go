@@ -35,7 +35,6 @@ func initMemoryStorage(cfg *config.Values, logger logger.LogClient) *Storage {
 
 func initPgStorage(cfg *config.Values, logger logger.LogClient) (*Storage, shortenerprovider.ShortenerProvider) {
 	err := migration.ExecuteMigrations(cfg, logger)
-
 	if err != nil {
 		logger.Fatal(err)
 	}

@@ -2,6 +2,7 @@ package shorten
 
 import (
 	"net/http"
+
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 
@@ -18,7 +19,6 @@ func (r *shortenRouter) GetUserURLS(ctx *gin.Context) {
 
 	userID := ctx.GetString(constants.ContextUserID)
 	urls, err := r.urlUseCase.GetUserURLs(ctx, userID)
-
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: err.Error()})
 		return

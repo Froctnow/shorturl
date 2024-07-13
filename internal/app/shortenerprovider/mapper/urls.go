@@ -5,10 +5,10 @@ import (
 	"strings"
 )
 
-func (m *mapper) URLIDs(urls *[]string) map[string]any {
+func (m *mapper) URLIDs(urls []string) map[string]any {
 	var IDs []string
 
-	for _, url := range *urls {
+	for _, url := range urls {
 		IDs = append(IDs, fmt.Sprintf("'%s'", url))
 	}
 

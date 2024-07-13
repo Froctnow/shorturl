@@ -10,7 +10,7 @@ type URL interface {
 	GetEntity(ctx context.Context, alias string) *URLEntity
 	CreateBatch(ctx context.Context, dto *[]BatchURLDto, userID string) (*[]BatchURL, error)
 	GetUserURLs(ctx context.Context, userID string) (*[]UserURL, error)
-	DeleteShortURLs(ctx context.Context, urls *[]string, userID string) error
+	DeleteShortURLs(ctx context.Context, urls []string, userID string) error
 }
 
 type URLEntity struct {
