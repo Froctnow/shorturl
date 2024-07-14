@@ -6,9 +6,10 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strings"
+
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/pkg/logger"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,7 +32,6 @@ func DecompressMiddleware(logger logger.LogClient) gin.HandlerFunc {
 		}
 
 		gzipReader, err := gzip.NewReader(c.Request.Body)
-
 		if err != nil {
 			logger.Error(fmt.Errorf("can't get gzip reader: %w", err))
 			c.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: "can't get gzip reader"})

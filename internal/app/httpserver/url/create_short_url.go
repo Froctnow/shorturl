@@ -5,10 +5,11 @@ import (
 	"io"
 	"net/http"
 	"regexp"
+	"strings"
+
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/repository"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -23,7 +24,6 @@ func (r *urlRouter) CreateShortURL(ctx *gin.Context) {
 	}
 
 	body, err := io.ReadAll(ctx.Request.Body)
-
 	if err != nil {
 		ctx.AbortWithStatusJSON(http.StatusInternalServerError, httpmodels.ErrorResponse{Error: "Something went wrong"})
 		return

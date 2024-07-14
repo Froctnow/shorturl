@@ -8,7 +8,7 @@ INSERT INTO shortener.urls (url, user_id) VALUES ($1, $2) ON CONFLICT (url) DO N
 {{end}}
 
 {{define "GetURL"}}
-SELECT url FROM shortener.urls WHERE id = $1;
+SELECT url, is_deleted FROM shortener.urls WHERE id = $1;
 {{end}}
 
 {{define "GetURLID"}}
@@ -17,4 +17,11 @@ SELECT id FROM shortener.urls WHERE url = $1;
 
 {{define "GetUserURLs"}}
 SELECT id, url FROM shortener.urls WHERE user_id = $1;
+{{end}}
+
+{{define "DeleteURLs"}}
+UPDATE shortener.urls
+SET is_deleted = true
+WHERE id IN ({{.IDs}})
+    AND user_id = $1
 {{end}}

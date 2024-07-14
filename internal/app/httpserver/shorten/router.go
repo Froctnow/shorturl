@@ -1,9 +1,10 @@
 package shorten
 
 import (
+	"strings"
+
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,6 +32,7 @@ func NewRouter(
 	urlGroup.POST("/shorten", router.CreateShortURL)
 	urlGroup.POST("/shorten/batch", router.CreateBatchShortURL)
 	urlGroup.GET("/user/urls", router.GetUserURLS)
+	urlGroup.DELETE("/user/urls", router.DeleteShortURLs)
 
 	return router
 }

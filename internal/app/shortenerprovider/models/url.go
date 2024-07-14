@@ -1,7 +1,8 @@
 package models
 
 type URL struct {
-	ID     string `db:"id"`
-	URL    string `db:"url"`
-	UserID string `db:"user_id"`
+	ID        string `db:"id"`
+	URL       string `db:"url"`
+	UserID    string `db:"user_id"`
+	IsDeleted bool   `db:"is_deleted"`
 }

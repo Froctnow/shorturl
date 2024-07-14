@@ -2,6 +2,7 @@ package url
 
 import (
 	"context"
+
 	httpmodels "shorturl/internal/app/httpserver/models"
 	"shorturl/internal/app/repository"
 )
@@ -17,7 +18,6 @@ func (u *urlUseCase) CreateBatchShortURL(ctx context.Context, request *[]httpmod
 	}
 
 	batchURL, err := u.urlRepository.CreateBatch(ctx, &dto, userID)
-
 	if err != nil {
 		return nil, err
 	}

@@ -7,6 +7,8 @@ import (
 	"io"
 	"net/http"
 	"net/http/httptest"
+	"testing"
+
 	"shorturl/internal/app/config"
 	"shorturl/internal/app/httpserver/constants"
 	httpmodels "shorturl/internal/app/httpserver/models"
@@ -14,14 +16,15 @@ import (
 	"shorturl/internal/app/storage"
 	"shorturl/internal/app/usecase/url"
 	"shorturl/internal/app/validator"
-	"testing"
 
 	"github.com/gin-gonic/gin"
 	"github.com/stretchr/testify/assert"
 )
 
-const ServerURL = "http://localhost:8080"
-const targetRoute = "/api/shorten"
+const (
+	ServerURL   = "http://localhost:8080"
+	targetRoute = "/api/shorten"
+)
 
 func TestShortenRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()

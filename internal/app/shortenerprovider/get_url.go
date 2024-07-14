@@ -3,6 +3,7 @@ package shortenerprovider
 import (
 	"context"
 	"fmt"
+
 	"shorturl/internal/app/shortenerprovider/models"
 	"shorturl/pkg/pgclient"
 )
@@ -24,7 +25,6 @@ func (p *ShortenerDBProvider) GetURL(
 	}
 
 	err = rows.Err()
-
 	if err != nil {
 		return models.URL{}, fmt.Errorf("can't execute GetURL: %w", err)
 	}

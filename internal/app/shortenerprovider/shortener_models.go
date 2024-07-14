@@ -2,6 +2,7 @@ package shortenerprovider
 
 import (
 	"context"
+
 	"shorturl/internal/app/shortenerprovider/models"
 	"shorturl/pkg/logger"
 	"shorturl/pkg/pgclient"
@@ -32,6 +33,13 @@ type ShortenerProvider interface {
 		tx pgclient.Transaction,
 		UserID string,
 	) ([]models.URL, error)
+
+	DeleteURLs(
+		ctx context.Context,
+		tx pgclient.Transaction,
+		urls []string,
+		userID string,
+	) error
 
 	BeginTransaction() (pgclient.Transaction, error)
 	RollbackTransaction(tx pgclient.Transaction, log logger.LogClient)
