@@ -1,7 +1,7 @@
 package constants
 
 const (
-	RegexpURL        = "https?:\\/\\/(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)"
+	RegexpURL        = "(https?:\\/\\/)?[0-9a-zA-Z]+\\.[-_0-9a-zA-Z]+\\.[0-9a-zA-Z]+"
 	ContextUserID    = "user_id"
 	ContextIsNewUser = "is_new_user"
 )

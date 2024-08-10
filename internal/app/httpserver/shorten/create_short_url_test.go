@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -25,6 +26,36 @@ const (
 	ServerURL   = "http://localhost:8080"
 	targetRoute = "/api/shorten"
 )
+
+func BenchmarkShortenRouter_CreateShortURL(t *testing.B) {
+	ginEngine := gin.Default()
+
+	cfg, err := config.NewConfig(false)
+	if err != nil {
+		panic(fmt.Errorf("config read err %w", err))
+	}
+	logger, _ := log.New(*cfg)
+	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL, logger)
+	ginEngine.Use(gin.Recovery())
+	validatorInstance := validator.New()
+
+	apiGroup := ginEngine.Group("/")
+
+	_ = NewRouter(apiGroup, urlUseCase, validatorInstance)
+
+	for i := 0; i < t.N; i++ {
+		reqData, _ := json.Marshal(httpmodels.CreateURLRequest{URL: "https://practicum.yandex.ru/" + fmt.Sprint(rand.Int())})
+		request := httptest.NewRequest(http.MethodPost, targetRoute, bytes.NewReader(reqData))
+		request.Header.Add("Content-Type", "application/x-gzip")
+
+		w := httptest.NewRecorder()
+		ginEngine.ServeHTTP(w, request)
+
+		result := w.Result()
+		defer result.Body.Close()
+	}
+}
 
 func TestShortenRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()

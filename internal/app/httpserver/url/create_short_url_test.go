@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"io"
+	"math/rand"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -21,6 +22,36 @@ import (
 )
 
 const ServerURL = "http://localhost:8080"
+
+func BenchmarkShortenRouter_CreateShortURL(t *testing.B) {
+	ginEngine := gin.Default()
+
+	cfg, err := config.NewConfig(false)
+	if err != nil {
+		panic(fmt.Errorf("config read err %w", err))
+	}
+	logger, _ := log.New(*cfg)
+	storageInstance, _ := storage.NewStorage(config.StorageModeMemory, cfg, logger)
+	urlUseCase := url.NewUseCase(storageInstance.URLRepository, ServerURL, logger)
+	ginEngine.Use(gin.Recovery())
+
+	apiGroup := ginEngine.Group("/")
+
+	_ = NewRouter(apiGroup, urlUseCase)
+
+	for i := 0; i < t.N; i++ {
+		requestBody := strings.NewReader("https://practicum.yandex.ru/" + fmt.Sprint(rand.Int()))
+		request := httptest.NewRequest(http.MethodPost, "/", requestBody)
+		request.Header.Add("Content-Type", "text/plain")
+
+		w := httptest.NewRecorder()
+		ginEngine.ServeHTTP(w, request)
+
+		result := w.Result()
+		defer result.Body.Close()
+	}
+
+}
 
 func TestUrlRouter_CreateShortURL(t *testing.T) {
 	ginEngine := gin.Default()
