@@ -50,7 +50,6 @@ func BenchmarkShortenRouter_CreateShortURL(t *testing.B) {
 		result := w.Result()
 		defer result.Body.Close()
 	}
-
 }
 
 func TestUrlRouter_CreateShortURL(t *testing.T) {
